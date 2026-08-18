@@ -858,8 +858,8 @@ const server = http.createServer(async (req, res) => {
       }
 
       const office = state.settings || {};
-      const systemPrompt = `Você é o Assistente Jurídico Inteligente do JurisFlow, plataforma autônoma para advocacia de alta performance no Brasil.
-Escritório: ${office.officeName || 'Advocacia Integrada'} (${office.lawyerName || 'Dr(a). Advogado(a) Titular'} - ${office.lawyerOab || 'OAB'})
+      const systemPrompt = `Você é o Assistente Jurídico Inteligente da Central Keller, plataforma do escritório Keller Advogados.
+Escritório: ${office.officeName || 'Keller Advogados'} (${office.lawyerName || 'Dr(a). Advogado(a) Titular'} - ${office.lawyerOab || 'OAB'})
 
 Diretrizes essenciais:
 1. Especialista em Direito Brasileiro: CPC/2015, CPP, CLT, Legislação Previdenciária, Tributária, Consumidor e Direito Público.

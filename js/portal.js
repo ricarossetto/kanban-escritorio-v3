@@ -850,8 +850,8 @@ CPF: ${doc}`;
     },
     renderOfficeIdentity() {
       const s = Store?.state?.settings || {};
-      const officeName = s.officeName || 'Advocacia Integrada';
-      const officeSlogan = s.officeSlogan || 'Escritório';
+      const officeName = s.officeName || 'Keller Advogados';
+      const officeSlogan = s.officeSlogan || 'Desde 1983';
       const officeLogo = s.officeLogo || '';
 
       const nameEl = document.getElementById('sidebarOfficeName');
@@ -864,18 +864,21 @@ CPF: ${doc}`;
         if (officeLogo) {
           avatarEl.innerHTML = `<img src="${escapeHtml(officeLogo)}" class="office-custom-logo" alt="Logo">`;
           avatarEl.style.background = 'transparent';
+          avatarEl.style.backgroundImage = 'none';
         } else {
-          avatarEl.innerHTML = `<svg class="nav-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V7l7-4 7 4v14M9 10v2M15 10v2M9 15v2M15 15v2"/></svg>`;
-          avatarEl.style.background = 'rgba(201,168,76,.1)';
+          avatarEl.innerHTML = '';
+          avatarEl.style.backgroundImage = "url('assets/images/equipe.png')";
+          avatarEl.style.backgroundSize = 'cover';
+          avatarEl.style.backgroundPosition = 'center';
         }
       }
     },
     openOfficeSetup() {
       const s = Store.state.settings || {};
       const primaryTerm = Store.state.terms?.[0] || {};
-      document.getElementById('officeInputName').value = s.officeName || 'Advocacia Integrada';
-      document.getElementById('officeInputSlogan').value = s.officeSlogan || 'Sociedade de Advogados';
-      document.getElementById('officeInputLawyer').value = s.lawyerName || primaryTerm.name || 'Dr(a). Advogado(a) Titular';
+      document.getElementById('officeInputName').value = s.officeName || 'Keller Advogados';
+      document.getElementById('officeInputSlogan').value = s.officeSlogan || 'Desde 1983';
+      document.getElementById('officeInputLawyer').value = s.lawyerName || primaryTerm.name || 'Ricardo De Luca Rossetto';
       document.getElementById('officeInputOab').value = s.lawyerOab || primaryTerm.registration || 'OAB/RS 135294';
       document.getElementById('officeInputAddress').value = s.lawyerAddress || '';
       document.getElementById('officeInputCity').value = s.city || '';
