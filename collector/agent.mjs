@@ -270,7 +270,7 @@ async function readEprocDeadlineRows(page) {
 
 function appendEprocNotifications(rows, portal, target, pending) {
   const now = new Date().toISOString();
-  const term = `${config.monitoredTerm?.name || 'Advogado Monitorado'} · ${config.monitoredTerm?.registration || 'OAB/UF 000000'}`;
+  const term = `${config.monitoredTerm?.name || 'Ricardo De Luca Rossetto'} · ${config.monitoredTerm?.registration || 'OAB/RS 135294'}`;
   for (const row of rows) {
     const publishedAt = parseBrazilianDate(row.sentAt) || now.slice(0, 10);
     const startsAt = parseBrazilianDate(row.startsAt);
@@ -288,7 +288,7 @@ function appendEprocNotifications(rows, portal, target, pending) {
       title: pending ? 'Acompanhar publicação no DJEN' : row.event, description,
       status: pending ? 'aguardando' : 'triagem', source: portal.name, client: parties, process: row.process,
       deadline, priority: deadline && daysUntil(deadline) <= 2 ? 'urgente' : deadline && daysUntil(deadline) <= 7 ? 'importante' : 'normal',
-      responsible: 'Responsável', createdAt: now
+      responsible: 'Ricardo', createdAt: now
     });
   }
 }
@@ -334,7 +334,7 @@ function collectTasks(lines, portal, target) {
     target.tasks.push({
       id: externalId, externalId, title: text.slice(0, 180), description: text,
       status: 'triagem', source: portal.name, client: '', process,
-      deadline: date, priority: 'normal', responsible: 'Responsável', createdAt: now
+      deadline: date, priority: 'normal', responsible: 'Ricardo', createdAt: now
     });
   }
 }
@@ -354,7 +354,7 @@ function collectProcesses(lines, portal, target) {
 
 function collectIntimations(lines, portal, target) {
   const now = new Date().toISOString();
-  const term = `${config.monitoredTerm?.name || 'Advogado Monitorado'} · ${config.monitoredTerm?.registration || 'OAB/UF 000000'}`;
+  const term = `${config.monitoredTerm?.name || 'Ricardo De Luca Rossetto'} · ${config.monitoredTerm?.registration || 'OAB/RS 135294'}`;
   for (const [index, text] of lines.entries()) {
     if (!portal.accountScoped && !matchesMonitoredTerm(text)) continue;
     const process = text.match(PROCESS_RE)?.[0] || '';
@@ -388,7 +388,7 @@ async function waitForHumanAuthentication(page, portal, timeout) {
 
 function matchesMonitoredTerm(text) {
   const compact = normalizeSearch(text);
-  const name = normalizeSearch(config.monitoredTerm?.name || 'Advogado Monitorado');
+  const name = normalizeSearch(config.monitoredTerm?.name || 'Ricardo De Luca Rossetto');
   return compact.includes(name) || /135[.]?294/.test(compact);
 }
 

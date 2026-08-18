@@ -18,9 +18,9 @@ try {
   response = await fetch(`${server.baseUrl}/assets/fonts/inter-400.ttf`);
   assert(response.ok && response.headers.get('content-type') === 'font/ttf', 'Fonte local protegida não foi servida corretamente.');
 
-  response = await postJson(`${server.baseUrl}/api/auth/setup`, { username: 'usuario', displayName: 'Usuário do Escritório', password: 'Senha-202' });
+  response = await postJson(`${server.baseUrl}/api/auth/setup`, { username: 'admin', displayName: 'Advogado Administrador', password: 'Senha-202' });
   assert(response.status === 400, 'Senha com menos de 10 caracteres foi aceita.');
-  response = await postJson(`${server.baseUrl}/api/auth/setup`, { username: 'usuario', displayName: 'Usuário do Escritório', password }); payload = await response.json();
+  response = await postJson(`${server.baseUrl}/api/auth/setup`, { username: 'admin', displayName: 'Advogado Administrador', password }); payload = await response.json();
   assert(response.ok && payload.setupToken && payload.manualSecret && payload.qrCode.startsWith('data:image/png'), 'Configuração TOTP não foi iniciada.');
 
   response = await postJson(`${server.baseUrl}/api/auth/setup/verify`, { setupToken: payload.setupToken, code: generateTotp(payload.manualSecret) });
@@ -53,12 +53,12 @@ try {
 
   response = await postJson(`${server.baseUrl}/api/auth/logout`, {}, { Cookie: cookie, 'X-CSRF-Token': csrf }); assert(response.ok, 'Logout protegido falhou.');
   response = await fetch(`${server.baseUrl}/api/status`, { headers: { Cookie: cookie } }); assert(response.status === 401, 'Sessão continuou válida após logout.');
-  response = await postJson(`${server.baseUrl}/api/auth/login`, { username: 'usuario', password, code: recovery }); assert(response.ok, 'Código de recuperação válido foi recusado.');
+  response = await postJson(`${server.baseUrl}/api/auth/login`, { username: 'admin', password, code: recovery }); assert(response.ok, 'Código de recuperação válido foi recusado.');
   const recovered = await response.json(); const recoveryCookie = response.headers.get('set-cookie').split(';')[0];
   await postJson(`${server.baseUrl}/api/auth/logout`, {}, { Cookie: recoveryCookie, 'X-CSRF-Token': recovered.csrfToken });
-  response = await postJson(`${server.baseUrl}/api/auth/login`, { username: 'usuario', password, code: recovery }); assert(response.status === 401, 'Código de recuperação foi reutilizado.');
+  response = await postJson(`${server.baseUrl}/api/auth/login`, { username: 'admin', password, code: recovery }); assert(response.status === 401, 'Código de recuperação foi reutilizado.');
 
-  response = await postJson(`${server.baseUrl}/api/auth/login`, { username: 'usuario', password, code: generateTotp(payload.manualSecret), trustBrowser: true });
+  response = await postJson(`${server.baseUrl}/api/auth/login`, { username: 'admin', password, code: generateTotp(payload.manualSecret), trustBrowser: true });
   const trustedLogin = await response.json();
   const trustedCookies = response.headers.getSetCookie();
   const trustedCookie = trustedCookies.map(value => value.split(';')[0]).find(value => value.startsWith('keller_trusted='));

@@ -1,7 +1,7 @@
 (() => {
   'use strict';
 
-  const STORAGE_KEY = 'keller_central_v1';
+  const STORAGE_KEY = 'jurisflow_storage_v1';
   const TERMINAL_STATUSES = ['concluida'];
   const KANBAN_COLUMNS = [
     { id: 'triagem', title: 'Entrada & triagem', color: '#c9a84c' },
@@ -23,59 +23,123 @@
     version: 1,
     terms: [{
       id: 'term-principal',
-      name: 'Advogado Monitorado',
-      registration: 'OAB/UF 000000',
+      name: 'Ricardo De Luca Rossetto',
+      registration: 'OAB/RS 135294',
+      oabNumber: '135294',
+      oabUf: 'RS',
       active: true,
       primary: true
     }],
     sources: [
-      { id: 'advbox-calendar', name: 'Agenda ADVBOX', short: 'A', method: 'Webcal', status: 'attention', lastCheck: null, detail: 'Adicione a URL como segredo do servidor' },
-      { id: 'legalone', name: 'Legal One', short: 'L1', method: 'Sessão local', status: 'attention', lastCheck: null, detail: 'Agente local ainda não executado' },
-      { id: 'djen', name: 'DJEN / CNJ', short: 'CNJ', method: 'Consulta oficial', status: 'planned', lastCheck: null, detail: 'Conector preparado para próxima etapa' },
-      { id: 'datajud', name: 'DataJud', short: 'DJ', method: 'API pública', status: 'planned', lastCheck: null, detail: 'Enriquecimento de movimentações públicas' },
-      { id: 'a1', name: 'Portais com certificado A1', short: 'A1', method: 'Agente local', status: 'off', lastCheck: null, detail: 'Aguardando aquisição e configuração do PFX' }
+      { id: 'external-calendar', name: 'Agenda Externa (Webcal)', short: 'CAL', method: 'Webcal/iCal', status: 'planned', lastCheck: null, detail: 'Sincronize com Google Agenda, Outlook ou Apple' },
+      { id: 'djen-cnj', name: 'DJEN / CNJ Oficial', short: 'CNJ', method: 'API pública oficial', status: 'planned', lastCheck: null, detail: 'Conector de diários e publicações' },
+      { id: 'datajud-cnj', name: 'DataJud / CNJ', short: 'DJD', method: 'API pública oficial', status: 'planned', lastCheck: null, detail: 'Enriquecimento de andamentos processuais' },
+      { id: 'a1', name: 'Portais com certificado A1 / PJe', short: 'A1', method: 'Agente local seguro', status: 'off', lastCheck: null, detail: 'Integração direta com tribunais' }
     ],
     intimations: [
       {
-        id: 'int-demo-1', source: 'Demonstração', status: 'nova', unread: true,
+        id: 'int-demo-1', source: 'DJEN Oficial', status: 'nova', unread: true,
         title: 'Publicação identificada para conferência', process: '0000000-00.2026.8.21.0000',
-        client: 'Cliente de demonstração', court: 'TJRS · Unidade de demonstração', publishedAt: isoDate(0),
-        text: 'Registro de demonstração. Quando o coletor estiver ativo, o texto original da publicação ou da notificação será preservado neste espaço.',
-        term: 'Advogado Monitorado · OAB/UF 000000', createdAt: new Date().toISOString()
+        client: 'Cliente Modelo', court: 'Tribunal de Justiça · Vara Cível', publishedAt: isoDate(0),
+        text: 'Intimação de demonstração. Quando os coletores estiverem ativos, o texto original da publicação ou da notificação oficial será preservado neste espaço.',
+        term: 'Ricardo De Luca Rossetto · OAB/RS 135294', createdAt: new Date().toISOString()
       },
       {
-        id: 'int-demo-2', source: 'Legal One · demonstração', status: 'triagem', unread: false,
+        id: 'int-demo-2', source: 'Diário Eletrônico', status: 'triagem', unread: false,
         title: 'Movimentação processual aguardando análise', process: '5000000-00.2026.4.04.0000',
-        client: 'Processo de demonstração', court: 'TRF4 · Unidade de demonstração', publishedAt: isoDate(-1),
+        client: 'Processo de demonstração', court: 'Justiça Federal · Vara Federal', publishedAt: isoDate(-1),
         text: 'Conteúdo ilustrativo para testar a triagem, a criação de tarefas e a vinculação ao Kanban.',
-        term: 'Advogado Monitorado · OAB/UF 000000', createdAt: new Date(Date.now() - 86400000).toISOString()
+        term: 'Ricardo De Luca Rossetto · OAB/RS 135294', createdAt: new Date(Date.now() - 86400000).toISOString()
       }
     ],
     tasks: [
-      { id: 'task-demo-1', title: 'Conferir publicação importada', description: 'Validar o conteúdo original antes de definir qualquer prazo.', status: 'triagem', source: 'Demonstração', client: 'Cliente de demonstração', process: '0000000-00.2026.8.21.0000', deadline: isoDate(1), priority: 'urgente', responsible: 'Responsável', createdAt: new Date().toISOString() },
-      { id: 'task-demo-2', title: 'Revisar minuta processual', description: 'Segunda conferência do documento antes do protocolo.', status: 'revisao', source: 'Interna', client: 'Processo de demonstração', process: '5000000-00.2026.4.04.0000', deadline: isoDate(4), priority: 'normal', responsible: 'Responsável', createdAt: new Date().toISOString() },
-      { id: 'task-demo-3', title: 'Confirmar documentos com cliente', description: 'Aguardar o envio dos documentos complementares.', status: 'aguardando', source: 'Interna', client: 'Cliente de demonstração', process: '', deadline: isoDate(7), priority: 'importante', responsible: 'Equipe', createdAt: new Date().toISOString() }
+      { id: 'task-demo-1', title: 'Conferir publicação importada', description: 'Validar o conteúdo original antes de definir qualquer prazo.', status: 'triagem', source: 'Demonstração', client: 'Cliente Modelo', process: '0000000-00.2026.8.21.0000', deadline: isoDate(1), priority: 'urgente', responsible: 'Advogado', createdAt: new Date().toISOString() },
+      { id: 'task-demo-2', title: 'Revisar minuta processual', description: 'Segunda conferência do documento antes do protocolo.', status: 'revisao', source: 'Interna', client: 'Processo de demonstração', process: '5000000-00.2026.4.04.0000', deadline: isoDate(4), priority: 'normal', responsible: 'Advogado', createdAt: new Date().toISOString() },
+      { id: 'task-demo-3', title: 'Confirmar documentos com cliente', description: 'Aguardar o envio dos documentos complementares.', status: 'aguardando', source: 'Interna', client: 'Cliente Modelo', process: '', deadline: isoDate(7), priority: 'importante', responsible: 'Equipe', createdAt: new Date().toISOString() }
     ],
     processes: [
-      { id: 'proc-demo-1', number: '0000000-00.2026.8.21.0000', client: 'Cliente de demonstração', court: 'TJRS · Ijuí', secrecy: false, lastMovement: 'Publicação recebida para triagem', lastMovementAt: isoDate(0), monitoring: 'active' },
-      { id: 'proc-demo-2', number: '5000000-00.2026.4.04.0000', client: 'Processo de demonstração', court: 'TRF4 · JFRS', secrecy: true, lastMovement: 'Movimentação capturada pelo conector', lastMovementAt: isoDate(-1), monitoring: 'attention' }
+      { id: 'proc-demo-1', number: '0000000-00.2026.8.21.0000', client: 'Cliente Modelo', court: 'TJ · 1ª Vara Cível', secrecy: false, lastMovement: 'Publicação recebida para triagem', lastMovementAt: isoDate(0), monitoring: 'active' },
+      { id: 'proc-demo-2', number: '5000000-00.2026.4.04.0000', client: 'Processo de demonstração', court: 'TRF · 2ª Vara Federal', secrecy: true, lastMovement: 'Movimentação capturada pelo conector', lastMovementAt: isoDate(-1), monitoring: 'attention' }
     ],
     contacts: [],
+    customPrompts: [],
+    customLinks: [],
     configuration: {
       users: [], monitoredTerms: [], taskDefinitions: [], actionGroups: [], actionTypes: [], stages: [], goals: [], origins: [], partners: [], inboxSections: [], notificationAssignments: [], integrations: [], sourceProducts: []
     },
     agenda: [
-      { id: 'agenda-demo-1', title: 'Reunião de alinhamento processual', date: isoDate(1), time: '09:30', source: 'Interna', client: 'Cliente de demonstração', process: '' },
-      { id: 'agenda-demo-2', title: 'Prazo de conferência', date: isoDate(4), time: '17:00', source: 'Demonstração', client: 'Processo de demonstração', process: '5000000-00.2026.4.04.0000' }
+      { id: 'agenda-demo-1', title: 'Audiência de conciliação / instrução', date: isoDate(1), time: '09:30', source: 'Interna', client: 'Cliente Modelo', process: '0000000-00.2026.8.21.0000' },
+      { id: 'agenda-demo-2', title: 'Prazo fatal para recurso', date: isoDate(4), time: '17:00', source: 'Demonstração', client: 'Processo de demonstração', process: '5000000-00.2026.4.04.0000' }
     ],
     audit: [
-      { id: 'audit-initial', at: new Date().toISOString(), action: 'Central inicializada', detail: 'Ambiente local criado com registros de demonstração.', actor: 'Sistema' }
+      { id: 'audit-initial', at: new Date().toISOString(), action: 'Atrium Senda inicializado', detail: 'Ambiente pronto para uso com registros de demonstração.', actor: 'Sistema' }
     ],
-    settings: { demoMode: true, calendarConfigured: false, collectorConfigured: false, dismissedBanner: false }
+    settings: {
+      officeName: 'Keller Advogados',
+      officeSlogan: 'Sociedade de Advogados',
+      lawyerName: 'Ricardo De Luca Rossetto',
+      lawyerOab: 'OAB/RS 135294',
+      lawyerCpfCnpj: '000.000.000-00',
+      lawyerEmail: 'contato@keller.adv.br',
+      lawyerPhone: '(51) 99999-9999',
+      lawyerAddress: 'Endereço Profissional — Porto Alegre/RS',
+      externalCalendarUrl: '',
+      demoMode: true,
+      calendarConfigured: false,
+      collectorConfigured: false,
+      dismissedBanner: false
+    }
   };
 
   const deepClone = value => JSON.parse(JSON.stringify(value));
   const escapeHtml = value => String(value ?? '').replace(/[&<>'"]/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[char]));
+  function decodeHtmlEntities(value) {
+    if (!value) return '';
+    const ENTITY_MAP = {
+      '&nbsp;': ' ', '&amp;': '&', '&lt;': '<', '&gt;': '>', '&quot;': '"', '&#39;': "'", '&apos;': "'",
+      '&ccedil;': 'ç', '&Ccedil;': 'Ç',
+      '&aacute;': 'á', '&Aacute;': 'Á', '&eacute;': 'é', '&Eacute;': 'É', '&iacute;': 'í', '&Iacute;': 'Í', '&oacute;': 'ó', '&Oacute;': 'Ó', '&uacute;': 'ú', '&Uacute;': 'Ú',
+      '&agrave;': 'à', '&Agrave;': 'À', '&egrave;': 'è', '&Egrave;': 'È', '&igrave;': 'ì', '&Igrave;': 'Ì', '&ograve;': 'ò', '&Ograve;': 'Ò', '&ugrave;': 'ù', '&Ugrave;': 'Ù',
+      '&atilde;': 'ã', '&Atilde;': 'Ã', '&otilde;': 'õ', '&Otilde;': 'Õ', '&ntilde;': 'ñ', '&Ntilde;': 'Ñ',
+      '&acirc;': 'â', '&Acirc;': 'Â', '&ecirc;': 'ê', '&Ecirc;': 'Ê', '&icirc;': 'î', '&Icirc;': 'Î', '&ocirc;': 'ô', '&Ocirc;': 'Ô', '&ucirc;': 'û', '&Ucirc;': 'Û',
+      '&auml;': 'ä', '&Auml;': 'Ä', '&euml;': 'ë', '&Euml;': 'Ë', '&iuml;': 'ï', '&Iuml;': 'Ï', '&ouml;': 'ö', '&Ouml;': 'Ö', '&uuml;': 'ü', '&Uuml;': 'Ü',
+      '&ordf;': 'ª', '&ordm;': 'º', '&deg;': '°', '&sect;': '§', '&copy;': '©', '&reg;': '®', '&trade;': '™',
+      '&ndash;': '–', '&mdash;': '—', '&lsquo;': '‘', '&rsquo;': '’', '&ldquo;': '“', '&rdquo;': '”', '&bull;': '•', '&hellip;': '…'
+    };
+    let text = String(value);
+    for (const [entity, char] of Object.entries(ENTITY_MAP)) {
+      text = text.replaceAll(entity, char);
+      text = text.replaceAll(entity.toUpperCase(), char);
+    }
+    text = text.replace(/&#(\d+);/g, (_, dec) => {
+      try { return String.fromCodePoint(Number(dec)); } catch { return _; }
+    });
+    text = text.replace(/&#x([0-9a-fA-F]+);/g, (_, hex) => {
+      try { return String.fromCodePoint(parseInt(hex, 16)); } catch { return _; }
+    });
+    return text;
+  }
+  function formatMarkdown(text) {
+    if (!text) return '';
+    let html = escapeHtml(text);
+    html = html.replace(/```([\s\S]*?)```/g, (match, p1) => `<pre><code>${p1.trim()}</code></pre>`);
+    html = html.replace(/`([^`]+)`/g, '<code>$1</code>');
+    html = html.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+    html = html.replace(/\*([^*]+)\*/g, '<em>$1</em>');
+    html = html.replace(/^### (.*$)/gim, '<h4 style="color:var(--gold);margin:10px 0 4px 0;">$1</h4>');
+    html = html.replace(/^## (.*$)/gim, '<h3 style="color:var(--gold);margin:12px 0 6px 0;">$1</h3>');
+    html = html.replace(/^# (.*$)/gim, '<h2 style="color:var(--gold);margin:14px 0 8px 0;">$1</h2>');
+    html = html.replace(/^\s*[-•]\s+(.*)$/gim, '<li>$1</li>');
+    html = html.replace(/(<li>.*<\/li>)/s, '<ul>$1</ul>');
+    const lines = html.split('\n\n');
+    html = lines.map(line => {
+      const trimmed = line.trim();
+      if (!trimmed) return '';
+      if (trimmed.startsWith('<h') || trimmed.startsWith('<ul') || trimmed.startsWith('<pre') || trimmed.startsWith('<li')) return trimmed;
+      return `<p>${trimmed.replace(/\n/g, '<br>')}</p>`;
+    }).join('');
+    return html;
+  }
   const normalizeText = value => String(value ?? '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
   const formatDate = value => {
     if (!value) return '—';
@@ -124,7 +188,26 @@
     return `${m}m`;
   }
 
+  function getOfficeIdentity() {
+    const s = Store?.state?.settings || {};
+    const primaryTerm = Store?.state?.terms?.[0] || {};
+    const authUser = window.KellerAuth?.currentUser || {};
+    const lawyerName = s.lawyerName || primaryTerm.name || authUser.displayName || 'Dr(a). Advogado(a) Titular';
+    const lawyerOab = s.lawyerOab || primaryTerm.registration || 'OAB/UF 000000';
+    return {
+      officeName: s.officeName || 'Advocacia Integrada',
+      officeSlogan: s.officeSlogan || 'Escritório',
+      officeLogo: s.officeLogo || '',
+      lawyerName: lawyerName,
+      lawyerOab: lawyerOab,
+      lawyerCpf: s.lawyerCpfCnpj || '000.000.000-00',
+      lawyerAddress: s.lawyerAddress || 'Sede Profissional',
+      city: s.city || 'São Paulo/SP'
+    };
+  }
+
   function generateProcuracaoText(contact, process) {
+    const id = getOfficeIdentity();
     const name = contact?.name || '[NOME DO OUTORGANTE]';
     const doc = contact?.document || '[CPF/CNPJ]';
     const rg = contact?.rg ? `, RG nº ${contact.rg}` : '';
@@ -139,7 +222,7 @@ OUTORGANTE:
 ${name}, brasileiro(a)${civil}${prof}, inscrito(a) no CPF/MF sob o nº ${doc}${rg}, residente e domiciliado(a) em ${address}.
 
 OUTORGADO:
-ADVOGADO(A) RESPONSÁVEL, advogado regularmente inscrito nos quadros da Ordem dos Advogados do Brasil, Seccional do Rio Grande do Sul, sob o nº OAB/UF 000000, com escritório profissional em Keller Advogados Associados.
+${id.lawyerName.toUpperCase()}, advogado(a) regularmente inscrito(a) nos quadros da Ordem dos Advogados do Brasil sob o nº ${id.lawyerOab}, com escritório profissional em ${id.officeName}, estabelecido em ${id.lawyerAddress}.
 
 PODERES:
 Por este instrumento particular de mandato, o(a) OUTORGANTE nomeia e constitui o OUTORGADO seu procurador, conferindo-lhe amplos poderes para o foro em geral, com a cláusula "AD JUDICIA ET EXTRA", em qualquer Juízo, Instância ou Tribunal, bem como perante quaisquer órgãos públicos ou privados, autarquias e cartórios, podendo propor contra quem de direito as ações competentes e defendê-lo(a) nas que lhe forem propostas${procNumber}.
@@ -147,7 +230,7 @@ Por este instrumento particular de mandato, o(a) OUTORGANTE nomeia e constitui o
 PODERES ESPECIAIS:
 Nos termos do Artigo 105 do Código de Processo Civil (Lei nº 13.105/2015), são conferidos poderes especiais para confessar, reconhecer a procedência do pedido, transigir, desistir, renunciar ao direito sobre o qual se funda a ação, firmar compromissos ou acordos judiciais e extrajudiciais, receber valores, passar recibo e dar plena, geral e irrevogável quitação, bem como substabelecer esta a outrem, com ou sem reserva de poderes.
 
-${contact?.city || 'Porto Alegre/RS'}, ${new Intl.DateTimeFormat('pt-BR', { dateStyle: 'long' }).format(new Date())}.
+${contact?.city || id.city}, ${new Intl.DateTimeFormat('pt-BR', { dateStyle: 'long' }).format(new Date())}.
 
 
 _________________________________________________________
@@ -156,6 +239,7 @@ CPF: ${doc}`;
   }
 
   function generateContratoText(contact, process) {
+    const id = getOfficeIdentity();
     const name = contact?.name || '[NOME DO CLIENTE/CONTRATANTE]';
     const doc = contact?.document || '[CPF/CNPJ]';
     const address = [contact?.address, contact?.district, contact?.city, contact?.state].filter(Boolean).join(', ') || '[ENDEREÇO DO CONTRATANTE]';
@@ -174,7 +258,7 @@ Pelo presente instrumento particular, de um lado:
 
 CONTRATANTE: ${name}, inscrito(a) no CPF/CNPJ nº ${doc}, com domicílio em ${address}.
 
-CONTRATADO: KELLER ADVOGADOS ASSOCIADOS, representado pelo Dr. ADVOGADO(A) RESPONSÁVEL, OAB/UF 000000, com sede profissional estabelecida.
+CONTRATADO: ${id.officeName.toUpperCase()}, representado(a) por ${id.lawyerName}, inscrito(a) na ${id.lawyerOab}, com sede profissional em ${id.lawyerAddress}.
 
 As partes acima qualificadas celebram o presente Contrato, mediante as seguintes cláusulas:
 
@@ -191,16 +275,17 @@ CLÁUSULA TERCEIRA - DAS DESPESAS E CUSTAS
 Todas as custas processuais, preparos recursais, despesas com certidões, cópias e honorários periciais correrão por conta do CONTRATANTE.
 
 CLÁUSULA QUARTA - DO FORO
-Fica eleito o foro da Comarca de ${contact?.city || 'Porto Alegre/RS'} para dirimir quaisquer dúvidas oriundas deste contrato.
+Fica eleito o foro da Comarca de ${contact?.city || id.city} para dirimir quaisquer dúvidas oriundas deste contrato.
 
-${contact?.city || 'Porto Alegre/RS'}, ${new Intl.DateTimeFormat('pt-BR', { dateStyle: 'long' }).format(new Date())}.
+${contact?.city || id.city}, ${new Intl.DateTimeFormat('pt-BR', { dateStyle: 'long' }).format(new Date())}.
 
 
 _____________________________________        _____________________________________
-CONTRATANTE: ${name}                        CONTRATADO: Usuário do Escritório · OAB/UF 000000`;
+CONTRATANTE: ${name}                        CONTRATADO: ${id.lawyerName} · ${id.lawyerOab}`;
   }
 
   function generateDeclaracaoHipoText(contact) {
+    const id = getOfficeIdentity();
     const name = contact?.name || '[NOME DO DECLARANTE]';
     const doc = contact?.document || '[CPF/CNPJ]';
     const rg = contact?.rg ? `, RG nº ${contact.rg}` : '';
@@ -215,7 +300,7 @@ DECLARO, para todos os fins de direito e sob as penas da lei, em especial para a
 
 Por ser a expressão fiel da verdade, firmo a presente declaração.
 
-${contact?.city || 'Porto Alegre/RS'}, ${new Intl.DateTimeFormat('pt-BR', { dateStyle: 'long' }).format(new Date())}.
+${contact?.city || id.city}, ${new Intl.DateTimeFormat('pt-BR', { dateStyle: 'long' }).format(new Date())}.
 
 
 _________________________________________________________
@@ -249,13 +334,60 @@ CPF: ${doc}`;
       this.save();
     },
     ensureShape() {
-      ['terms', 'sources', 'intimations', 'tasks', 'processes', 'agenda', 'audit', 'contacts'].forEach(key => {
+      ['terms', 'sources', 'intimations', 'tasks', 'processes', 'agenda', 'audit', 'contacts', 'customPrompts', 'customLinks'].forEach(key => {
         if (!Array.isArray(this.state[key])) this.state[key] = [];
       });
-      this.state.configuration = { ...deepClone(sampleState.configuration), ...(this.state.configuration || {}) };
-      Object.keys(sampleState.configuration).forEach(key => { if (!Array.isArray(this.state.configuration[key])) this.state.configuration[key] = []; });
+      this.state.configuration = { ...(this.state.configuration || {}) };
+      const defaultOffice = window.OFFICE_DEFAULT_DATA || {};
+      for (const key of ['taskDefinitions', 'actionTypes', 'actionGroups', 'stages', 'origins', 'goals', 'users', 'inboxSections', 'notificationAssignments', 'integrations']) {
+        if (!Array.isArray(this.state.configuration[key]) || this.state.configuration[key].length === 0) {
+          if (Array.isArray(defaultOffice[key]) && defaultOffice[key].length > 0) {
+            this.state.configuration[key] = deepClone(defaultOffice[key]);
+          } else {
+            this.state.configuration[key] = [];
+          }
+        }
+      }
       this.state.settings = { ...sampleState.settings, ...(this.state.settings || {}) };
-      if (!this.state.terms.some(term => term.registration === 'OAB/UF 000000')) this.state.terms.unshift(deepClone(sampleState.terms[0]));
+      if (Array.isArray(this.state.sources)) {
+        this.state.sources.forEach(s => {
+          if (s.id === 'djen') s.id = 'djen-cnj';
+          if (s.id === 'datajud') s.id = 'datajud-cnj';
+        });
+        const seen = new Set();
+        this.state.sources = this.state.sources.filter(s => {
+          if (!s?.id || seen.has(s.id)) return false;
+          seen.add(s.id);
+          return true;
+        });
+      }
+      if (Array.isArray(this.state.processes)) {
+        this.state.processes.forEach(p => {
+          if (p.feeType === 'exito' && (p.feePercentage === '30' || !p.feePercentage) && (!p.feeAmount || p.feeAmount === '')) {
+            p.feeType = '';
+            p.feePercentage = '';
+            p.feeStatus = '';
+          }
+        });
+      }
+      if (!this.state.terms.length) this.state.terms.unshift(deepClone(sampleState.terms[0]));
+      if (this.state.terms[0]) {
+        if (!this.state.terms[0].registration || this.state.terms[0].registration === 'OAB/UF 000000') {
+          this.state.terms[0].registration = 'OAB/RS 135294';
+          this.state.terms[0].oabNumber = '135294';
+          this.state.terms[0].oabUf = 'RS';
+        }
+        if (!this.state.terms[0].name || this.state.terms[0].name === 'Dr(a). Advogado(a) Titular') {
+          this.state.terms[0].name = 'Ricardo De Luca Rossetto';
+        }
+      }
+      const authUser = window.KellerAuth?.currentUser;
+      if (authUser?.displayName && this.state.terms[0]) {
+        this.state.terms[0].name = authUser.displayName;
+        if (!this.state.settings.lawyerName || this.state.settings.lawyerName === 'Dr(a). Advogado(a) Titular') {
+          this.state.settings.lawyerName = authUser.displayName;
+        }
+      }
     },
     save() {
       clearTimeout(this.saveTimer);
@@ -274,8 +406,9 @@ CPF: ${doc}`;
         return response.ok;
       } catch { return false; }
     },
-    audit(action, detail, actor = 'Responsável') {
-      this.state.audit.unshift({ id: uid('audit'), at: new Date().toISOString(), action, detail, actor });
+    audit(action, detail, actor = 'Advogado') {
+      const author = window.KellerAuth?.currentUser?.displayName || actor;
+      this.state.audit.unshift({ id: uid('audit'), at: new Date().toISOString(), action, detail, actor: author });
       this.state.audit = this.state.audit.slice(0, 250);
       this.save();
     },
@@ -337,7 +470,10 @@ CPF: ${doc}`;
 
   const App = {
     currentView: 'dashboard',
-    inboxFilter: 'all',
+    inboxFilter: 'pendentes',
+    inboxSort: 'date-desc',
+    currentTourSlide: 0,
+    tempOfficeLogo: null,
     selectedIntimation: null,
     configurationSection: 'taskDefinitions',
     modalMode: null,
@@ -347,15 +483,21 @@ CPF: ${doc}`;
     agendaSelectedDate: null,
     agendaCalendarMonthOffset: 0,
     agendaTypeFilter: 'all',
+    aiChatHistory: [],
+    aiConfigured: false,
+    isAiTyping: false,
+    promptsFilter: { search: '', category: 'all', type: 'all' },
     async init() {
       await Store.load();
       this.bindNavigation();
       this.bindActions();
       this.renderAll();
       this.checkServerStatus();
+      this.checkAiStatus();
       document.getElementById('todayLabel').textContent = new Intl.DateTimeFormat('pt-BR', { day: '2-digit', month: 'long' }).format(new Date());
       if (Store.state.settings.dismissedBanner) document.getElementById('environmentBanner').classList.add('hidden');
-      this.initialSyncTimer = window.setTimeout(() => this.syncWhenIdle(), 60 * 1000);
+      this.checkFirstAccessTour();
+      this.syncAll({ silent: true });
       this.autoSyncTimer = window.setInterval(() => this.syncWhenIdle(), 5 * 60 * 1000);
     },
     bindNavigation() {
@@ -366,52 +508,122 @@ CPF: ${doc}`;
         if (event.key === '/' && !['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)) {
           event.preventDefault(); document.getElementById('globalSearch').focus();
         }
-        if (event.key === 'Escape') { this.closeModal(); this.closeJudicialSetup(); }
+        if (event.key === 'Escape') {
+          this.closeModal();
+          this.closeJudicialSetup();
+          this.closeOfficeSetup();
+          this.closeGuidedTour();
+          this.closeCalendarConfigModal();
+          this.closeGeminiKeyModal();
+        }
         if (event.key === 'Enter') {
-          const interactive = event.target.closest('[data-view-link], [data-process-id], [data-contact-id], [data-agenda-id], [data-source-id], #primaryTermCard');
+          const interactive = event.target.closest('[data-view-link], [data-process-id], [data-contact-id], [data-agenda-id], [data-source-id], #primaryTermCard, .sidebar-office');
           if (interactive && !['INPUT', 'TEXTAREA', 'SELECT', 'BUTTON'].includes(event.target.tagName)) { event.preventDefault(); interactive.click(); }
         }
       });
     },
     bindActions() {
       const byId = id => document.getElementById(id);
-      byId('dismissBanner').addEventListener('click', () => { byId('environmentBanner').classList.add('hidden'); Store.state.settings.dismissedBanner = true; Store.save(); });
-      byId('syncButton').addEventListener('click', () => this.syncAll());
-      byId('agendaSyncButton').addEventListener('click', () => this.syncAll());
-      byId('newTaskButton').addEventListener('click', () => this.openTaskModal());
-      byId('newContactButton').addEventListener('click', () => this.openContactModal());
-      byId('newAgendaButton').addEventListener('click', () => this.openAgendaModal());
-      byId('newConfigurationButton').addEventListener('click', () => this.openConfigurationModal());
-      byId('newIntimationButton').addEventListener('click', () => this.openIntimationModal());
-      byId('newProcessButton').addEventListener('click', () => this.openProcessModal());
-      byId('newTermButton').addEventListener('click', () => this.openTermModal());
-      byId('primaryTermCard').addEventListener('click', () => {
-        const term = Store.state.terms.find(item => item.registration === 'OAB/UF 000000') || Store.state.terms[0]; if (term) this.openTermModal(term);
+      byId('dismissBanner')?.addEventListener('click', () => { byId('environmentBanner')?.classList.add('hidden'); Store.state.settings.dismissedBanner = true; Store.save(); });
+      byId('syncButton')?.addEventListener('click', () => this.syncAll());
+      byId('agendaSyncButton')?.addEventListener('click', () => this.syncAll());
+      byId('tourButton')?.addEventListener('click', () => this.openGuidedTour());
+      byId('newTaskButton')?.addEventListener('click', () => this.openTaskModal());
+      byId('newContactButton')?.addEventListener('click', () => this.openContactModal());
+      byId('newAgendaButton')?.addEventListener('click', () => this.openAgendaModal());
+      byId('newConfigurationButton')?.addEventListener('click', () => this.openConfigurationModal());
+      byId('newIntimationButton')?.addEventListener('click', () => this.openIntimationModal());
+      byId('newProcessButton')?.addEventListener('click', () => this.openProcessModal());
+      byId('newTermButton')?.addEventListener('click', () => this.openTermModal());
+      byId('primaryTermCard')?.addEventListener('click', () => {
+        const term = Store.state.terms[0] || { id: uid('term'), name: 'Dr(a). Advogado(a) Titular', registration: 'OAB/UF 000000', type: 'oab', active: true };
+        this.openTermModal(term);
       });
-      byId('modalClose').addEventListener('click', () => this.closeModal());
-      byId('modalCancel').addEventListener('click', () => this.closeModal());
-      byId('modalBackdrop').addEventListener('click', event => { if (event.target === byId('modalBackdrop')) this.closeModal(); });
-      byId('modalForm').addEventListener('submit', event => this.handleModalSubmit(event));
-      byId('inboxFilters').addEventListener('click', event => {
+
+      // Personalização do Escritório
+      document.querySelector('.sidebar-office')?.addEventListener('click', () => this.openOfficeSetup());
+      byId('officeSetupClose')?.addEventListener('click', () => this.closeOfficeSetup());
+      byId('officeSetupCancel')?.addEventListener('click', () => this.closeOfficeSetup());
+      byId('officeSetupBackdrop')?.addEventListener('click', event => { if (event.target === byId('officeSetupBackdrop')) this.closeOfficeSetup(); });
+      byId('btnChooseOfficeLogo')?.addEventListener('click', () => byId('officeLogoInput')?.click());
+      byId('officeLogoInput')?.addEventListener('change', event => this.handleOfficeLogoUpload(event.target.files?.[0]));
+      byId('btnRemoveOfficeLogo')?.addEventListener('click', () => { this.tempOfficeLogo = null; this.updateOfficeLogoPreview(); });
+      byId('officeSetupForm')?.addEventListener('submit', event => this.handleOfficeSetupSubmit(event));
+
+      // Apresentação Guiada (Tour)
+      byId('tourCloseButton')?.addEventListener('click', () => this.closeGuidedTour());
+      byId('tourSkipButton')?.addEventListener('click', () => this.closeGuidedTour());
+      byId('tourPrevButton')?.addEventListener('click', () => this.showTourSlide(this.currentTourSlide - 1));
+      byId('tourNextButton')?.addEventListener('click', () => this.showTourSlide(this.currentTourSlide + 1));
+      byId('tourDots')?.addEventListener('click', event => {
+        const dot = event.target.closest('.tour-dot');
+        if (dot && dot.dataset.slideTarget !== undefined) this.showTourSlide(Number(dot.dataset.slideTarget));
+      });
+
+      byId('modalClose')?.addEventListener('click', () => this.closeModal());
+      byId('modalCancel')?.addEventListener('click', () => this.closeModal());
+      byId('modalBackdrop')?.addEventListener('click', event => { if (event.target === byId('modalBackdrop')) this.closeModal(); });
+      byId('modalForm')?.addEventListener('submit', event => this.handleModalSubmit(event));
+      byId('inboxFilters')?.addEventListener('click', event => {
         const button = event.target.closest('button[data-filter]'); if (!button) return;
         this.inboxFilter = button.dataset.filter;
         byId('inboxFilters').querySelectorAll('button').forEach(item => item.classList.toggle('active', item === button));
         this.renderInbox();
       });
-      byId('processSearch').addEventListener('input', () => this.renderProcesses(byId('processSearch').value));
-      byId('contactSearch').addEventListener('input', () => this.renderContacts(byId('contactSearch').value));
-      byId('configurationSearch').addEventListener('input', () => this.renderConfiguration(byId('configurationSearch').value));
-      byId('configurationTabs').addEventListener('click', event => {
+      byId('inboxSortSelect')?.addEventListener('change', event => {
+        this.inboxSort = event.target.value;
+        this.renderInbox();
+      });
+      document.querySelectorAll('.list-head-sort').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const col = btn.dataset.inboxSortCol;
+          if (col === 'date') {
+            this.inboxSort = this.inboxSort === 'date-desc' ? 'date-asc' : 'date-desc';
+          } else if (col === 'deadline') {
+            this.inboxSort = this.inboxSort === 'deadline-asc' ? 'deadline-desc' : 'deadline-asc';
+          }
+          if (byId('inboxSortSelect')) byId('inboxSortSelect').value = this.inboxSort;
+          this.renderInbox();
+        });
+      });
+      byId('processSearch')?.addEventListener('input', () => this.renderProcesses(byId('processSearch').value));
+      byId('contactSearch')?.addEventListener('input', () => this.renderContacts(byId('contactSearch').value));
+      byId('configurationSearch')?.addEventListener('input', () => this.renderConfiguration(byId('configurationSearch').value));
+      byId('configurationTabs')?.addEventListener('click', event => {
         const button = event.target.closest('button[data-config-section]'); if (!button) return;
         this.configurationSection = button.dataset.configSection;
-        byId('configurationSearch').value = '';
+        if (byId('configurationSearch')) byId('configurationSearch').value = '';
         this.renderConfiguration();
       });
-      byId('globalSearch').addEventListener('input', event => this.globalSearch(event.target.value));
-      byId('importIntimationButton').addEventListener('click', () => byId('jsonImportInput').click());
-      byId('jsonImportInput').addEventListener('change', event => this.importJson(event.target.files[0]));
-      byId('exportAuditButton').addEventListener('click', () => this.exportJson(Store.state.audit, `keller-auditoria-${isoDate()}.json`));
-      byId('configureCalendarButton').addEventListener('click', () => this.openGuideModal('calendar'));
+      byId('globalSearch')?.addEventListener('input', event => this.globalSearch(event.target.value));
+      byId('importIntimationButton')?.addEventListener('click', () => byId('jsonImportInput')?.click());
+      byId('jsonImportInput')?.addEventListener('change', event => this.importJson(event.target.files[0]));
+      byId('exportAuditButton')?.addEventListener('click', () => this.exportJson(Store.state.audit, `atrium-senda-auditoria-${isoDate()}.json`));
+
+      // Agenda Externa
+      byId('configureCalendarButton')?.addEventListener('click', () => this.openCalendarConfigModal());
+      byId('calendarConfigClose')?.addEventListener('click', () => this.closeCalendarConfigModal());
+      byId('calendarConfigCancel')?.addEventListener('click', () => this.closeCalendarConfigModal());
+      byId('calendarConfigBackdrop')?.addEventListener('click', event => { if (event.target === byId('calendarConfigBackdrop')) this.closeCalendarConfigModal(); });
+      byId('calendarConfigForm')?.addEventListener('submit', event => this.handleCalendarConfigSubmit(event));
+
+      // Assistente IA (Google Gemini)
+      byId('btnOpenGeminiKeyModal')?.addEventListener('click', () => this.openGeminiKeyModal());
+      byId('geminiKeyClose')?.addEventListener('click', () => this.closeGeminiKeyModal());
+      byId('geminiKeyCancel')?.addEventListener('click', () => this.closeGeminiKeyModal());
+      byId('geminiKeyBackdrop')?.addEventListener('click', event => { if (event.target === byId('geminiKeyBackdrop')) this.closeGeminiKeyModal(); });
+      byId('geminiKeyForm')?.addEventListener('submit', event => this.handleGeminiKeySubmit(event));
+      byId('btnSaveQuickAiKey')?.addEventListener('click', () => this.handleQuickAiKeySubmit());
+      byId('btnClearAiConversation')?.addEventListener('click', () => this.clearAiConversation());
+      document.querySelectorAll('.quick-prompt-btn').forEach(btn => btn.addEventListener('click', () => this.sendQuickPrompt(btn.dataset.prompt)));
+      byId('aiChatForm')?.addEventListener('submit', event => this.handleAiChatSubmit(event));
+      byId('aiChatInput')?.addEventListener('keydown', event => {
+        if (event.key === 'Enter' && !event.shiftKey) {
+          event.preventDefault();
+          byId('aiChatForm').requestSubmit();
+        }
+      });
+
       byId('certificateGuideButton').addEventListener('click', () => this.openJudicialSetup());
       byId('judicialSetupClose').addEventListener('click', () => this.closeJudicialSetup());
       byId('judicialSetupBackdrop').addEventListener('click', event => { if (event.target === byId('judicialSetupBackdrop')) this.closeJudicialSetup(); });
@@ -442,6 +654,26 @@ CPF: ${doc}`;
       byId('docGenProcessSelect')?.addEventListener('change', () => this.updateDocPreview());
       byId('docGenCopyButton')?.addEventListener('click', () => this.copyDocToClipboard());
       byId('docGenDownloadButton')?.addEventListener('click', () => this.downloadDoc());
+
+      // Importador de planilhas
+      const dropzone = byId('importerDropzone');
+      const fileInput = byId('importerFileInput');
+      if (dropzone && fileInput) {
+        byId('btnSelectSpreadsheet')?.addEventListener('click', (e) => { e.stopPropagation(); fileInput.click(); });
+        dropzone.addEventListener('click', () => fileInput.click());
+        dropzone.addEventListener('dragover', (e) => { e.preventDefault(); dropzone.classList.add('drag-over'); });
+        dropzone.addEventListener('dragleave', () => dropzone.classList.remove('drag-over'));
+        dropzone.addEventListener('drop', (e) => {
+          e.preventDefault();
+          dropzone.classList.remove('drag-over');
+          if (e.dataTransfer.files?.[0]) this.handleSpreadsheetUpload(e.dataTransfer.files[0]);
+        });
+        fileInput.addEventListener('change', (e) => {
+          if (e.target.files?.[0]) this.handleSpreadsheetUpload(e.target.files[0]);
+        });
+        byId('importerCancelButton')?.addEventListener('click', () => this.cancelSpreadsheetImport());
+        byId('importerCommitButton')?.addEventListener('click', () => this.commitSpreadsheetImport());
+      }
       document.querySelectorAll('th[data-sort-table]').forEach(th => {
         th.addEventListener('click', () => {
           const table = th.dataset.sortTable;
@@ -483,6 +715,119 @@ CPF: ${doc}`;
         this.renderAgenda();
         this.toast('Exibindo todas as atividades próximas.', 'success');
       });
+
+      // Biblioteca de Prompts Jurídicos
+      byId('promptsSearchInput')?.addEventListener('input', (e) => {
+        this.promptsFilter.search = e.target.value;
+        const btnClear = byId('btnClearPromptsSearch');
+        if (btnClear) btnClear.classList.toggle('hidden', !e.target.value);
+        this.renderPrompts();
+      });
+      byId('btnClearPromptsSearch')?.addEventListener('click', () => {
+        const input = byId('promptsSearchInput');
+        if (input) input.value = '';
+        this.promptsFilter.search = '';
+        byId('btnClearPromptsSearch')?.classList.add('hidden');
+        this.renderPrompts();
+        input?.focus();
+      });
+      byId('promptCategorySelect')?.addEventListener('change', (e) => {
+        this.promptsFilter.category = e.target.value;
+        const chipsContainer = byId('promptsCategoryChips');
+        if (chipsContainer) {
+          chipsContainer.querySelectorAll('.prompt-chip').forEach(chip => {
+            chip.classList.toggle('active', chip.dataset.category === this.promptsFilter.category);
+          });
+        }
+        this.renderPrompts();
+      });
+      byId('promptTypeSelect')?.addEventListener('change', (e) => {
+        this.promptsFilter.type = e.target.value;
+        this.renderPrompts();
+      });
+      byId('promptsCategoryChips')?.addEventListener('click', (e) => {
+        const chip = e.target.closest('.prompt-chip');
+        if (!chip) return;
+        const cat = chip.dataset.category || 'all';
+        this.promptsFilter.category = cat;
+        const select = byId('promptCategorySelect');
+        if (select) select.value = cat;
+        this.renderPrompts();
+      });
+      byId('btnNewPrompt')?.addEventListener('click', () => this.openNewPromptModal());
+      byId('btnNewLink')?.addEventListener('click', () => this.openNewLinkModal());
+      byId('promptsGrid')?.addEventListener('click', (e) => {
+        const copyBtn = e.target.closest('[data-copy-prompt]');
+        if (copyBtn) {
+          const promptId = copyBtn.dataset.copyPrompt;
+          const all = [...(Store.state.customPrompts || []), ...(window.PROMPTS_DATA || [])];
+          const p = all.find(item => item.id === promptId);
+          if (p) this.copyPrompt(p.prompt, copyBtn);
+          return;
+        }
+        const useBtn = e.target.closest('[data-use-prompt]');
+        if (useBtn) {
+          const promptId = useBtn.dataset.usePrompt;
+          const all = [...(Store.state.customPrompts || []), ...(window.PROMPTS_DATA || [])];
+          const p = all.find(item => item.id === promptId);
+          if (p) this.usePromptInAi(p.prompt);
+          return;
+        }
+        const editBtn = e.target.closest('[data-edit-prompt]');
+        if (editBtn) {
+          const promptId = editBtn.dataset.editPrompt;
+          const p = (Store.state.customPrompts || []).find(item => item.id === promptId);
+          if (p) this.openNewPromptModal(p);
+          return;
+        }
+        const deleteBtn = e.target.closest('[data-delete-prompt]');
+        if (deleteBtn) {
+          const promptId = deleteBtn.dataset.deletePrompt;
+          const idx = (Store.state.customPrompts || []).findIndex(p => p.id === promptId);
+          if (idx >= 0) {
+            const removed = Store.state.customPrompts.splice(idx, 1)[0];
+            Store.audit('Prompt personalizado excluído', removed?.title || promptId);
+            Store.save();
+            this.renderPrompts();
+            this.toast('Prompt excluído com sucesso.', 'success');
+          }
+          return;
+        }
+      });
+      byId('customLinksGrid')?.addEventListener('click', (e) => {
+        const deleteBtn = e.target.closest('[data-delete-link]');
+        if (deleteBtn) {
+          e.preventDefault();
+          e.stopPropagation();
+          const linkId = deleteBtn.dataset.deleteLink;
+          const idx = (Store.state.customLinks || []).findIndex(l => l.id === linkId);
+          if (idx >= 0) {
+            const removed = Store.state.customLinks.splice(idx, 1)[0];
+            Store.audit('Link útil excluído', removed?.title || linkId);
+            Store.save();
+            this.renderLinks();
+            this.toast('Link útil excluído com sucesso.', 'success');
+          }
+          return;
+        }
+      });
+      byId('configurationList')?.addEventListener('click', (e) => {
+        const deleteBtn = e.target.closest('[data-delete-config]');
+        if (deleteBtn) {
+          e.preventDefault();
+          e.stopPropagation();
+          const index = Number(deleteBtn.dataset.deleteConfig);
+          const list = Store.state.configuration[this.configurationSection];
+          if (Array.isArray(list) && index >= 0 && index < list.length) {
+            const removed = list.splice(index, 1)[0];
+            Store.audit('Configuração removida', `${this.configurationSection} · ${typeof removed === 'string' ? removed : (removed?.name || 'item')}`);
+            Store.save();
+            this.renderConfiguration();
+            this.toast('Item removido com sucesso.', 'success');
+          }
+          return;
+        }
+      });
     },
     switchView(view) {
       this.currentView = view;
@@ -493,13 +838,139 @@ CPF: ${doc}`;
         document.getElementById('viewTitle').textContent = section.dataset.title;
         document.getElementById('viewEyebrow').textContent = section.dataset.eyebrow;
       }
+      if (view === 'prompts') this.renderPrompts();
+      if (view === 'links') this.renderLinks();
       document.getElementById('sidebar').classList.remove('open');
       window.scrollTo({ top: 0, behavior: 'smooth' });
     },
     renderAll() {
-      ['renderMetrics', 'renderPriorities', 'renderActivity', 'renderSources', 'renderInbox', 'renderKanban', 'renderProcesses', 'renderContacts', 'renderAgenda', 'renderMonitoring', 'renderConfiguration', 'renderAudit'].forEach(method => {
+      ['renderOfficeIdentity', 'renderMetrics', 'renderWeeklyDistribution', 'renderPriorities', 'renderActivity', 'renderSources', 'renderInbox', 'renderKanban', 'renderProcesses', 'renderContacts', 'renderAgenda', 'renderMonitoring', 'renderPrompts', 'renderLinks', 'renderConfiguration', 'renderAudit'].forEach(method => {
         try { this[method](); } catch (error) { console.error(`Falha em ${method}:`, error); }
       });
+    },
+    renderOfficeIdentity() {
+      const s = Store?.state?.settings || {};
+      const officeName = s.officeName || 'Advocacia Integrada';
+      const officeSlogan = s.officeSlogan || 'Escritório';
+      const officeLogo = s.officeLogo || '';
+
+      const nameEl = document.getElementById('sidebarOfficeName');
+      const labelEl = document.getElementById('sidebarOfficeLabel');
+      const avatarEl = document.querySelector('.sidebar-office .office-avatar-icon');
+      if (nameEl) nameEl.textContent = officeName;
+      if (labelEl) labelEl.textContent = officeSlogan;
+
+      if (avatarEl) {
+        if (officeLogo) {
+          avatarEl.innerHTML = `<img src="${escapeHtml(officeLogo)}" class="office-custom-logo" alt="Logo">`;
+          avatarEl.style.background = 'transparent';
+        } else {
+          avatarEl.innerHTML = `<svg class="nav-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V7l7-4 7 4v14M9 10v2M15 10v2M9 15v2M15 15v2"/></svg>`;
+          avatarEl.style.background = 'rgba(201,168,76,.1)';
+        }
+      }
+    },
+    openOfficeSetup() {
+      const s = Store.state.settings || {};
+      const primaryTerm = Store.state.terms?.[0] || {};
+      document.getElementById('officeInputName').value = s.officeName || 'Advocacia Integrada';
+      document.getElementById('officeInputSlogan').value = s.officeSlogan || 'Sociedade de Advogados';
+      document.getElementById('officeInputLawyer').value = s.lawyerName || primaryTerm.name || 'Dr(a). Advogado(a) Titular';
+      document.getElementById('officeInputOab').value = s.lawyerOab || primaryTerm.registration || 'OAB/RS 135294';
+      document.getElementById('officeInputAddress').value = s.lawyerAddress || '';
+      document.getElementById('officeInputCity').value = s.city || '';
+
+      this.tempOfficeLogo = s.officeLogo || null;
+      this.updateOfficeLogoPreview();
+
+      document.getElementById('officeSetupBackdrop').classList.remove('hidden');
+    },
+    closeOfficeSetup() {
+      document.getElementById('officeSetupBackdrop').classList.add('hidden');
+    },
+    updateOfficeLogoPreview() {
+      const preview = document.getElementById('officeLogoPreview');
+      const removeBtn = document.getElementById('btnRemoveOfficeLogo');
+      if (this.tempOfficeLogo) {
+        preview.innerHTML = `<img src="${escapeHtml(this.tempOfficeLogo)}" alt="Prévia">`;
+        removeBtn?.classList.remove('hidden');
+      } else {
+        preview.innerHTML = `<svg class="nav-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V7l7-4 7 4v14M9 10v2M15 10v2M9 15v2M15 15v2"/></svg>`;
+        removeBtn?.classList.add('hidden');
+      }
+    },
+    handleOfficeLogoUpload(file) {
+      if (!file) return;
+      if (file.size > 2 * 1024 * 1024) {
+        this.toast('A imagem deve ter no máximo 2MB.', 'danger');
+        return;
+      }
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        this.tempOfficeLogo = e.target.result;
+        this.updateOfficeLogoPreview();
+        this.toast('Logo carregada com sucesso.', 'success');
+      };
+      reader.readAsDataURL(file);
+    },
+    handleOfficeSetupSubmit(event) {
+      event.preventDefault();
+      Store.state.settings.officeName = document.getElementById('officeInputName').value.trim();
+      Store.state.settings.officeSlogan = document.getElementById('officeInputSlogan').value.trim();
+      Store.state.settings.lawyerName = document.getElementById('officeInputLawyer').value.trim();
+      Store.state.settings.lawyerOab = document.getElementById('officeInputOab').value.trim();
+      Store.state.settings.lawyerAddress = document.getElementById('officeInputAddress').value.trim();
+      Store.state.settings.city = document.getElementById('officeInputCity').value.trim();
+      Store.state.settings.officeLogo = this.tempOfficeLogo;
+
+      if (Store.state.terms?.[0]) {
+        Store.state.terms[0].name = Store.state.settings.lawyerName;
+        Store.state.terms[0].registration = Store.state.settings.lawyerOab;
+      }
+
+      Store.audit('Identidade do escritório atualizada', Store.state.settings.officeName);
+      Store.save();
+      this.renderOfficeIdentity();
+      this.renderMonitoring();
+      this.closeOfficeSetup();
+      this.toast('Identidade do escritório salva com sucesso!', 'success');
+    },
+    checkFirstAccessTour() {
+      const seen = localStorage.getItem('jurisflow_tour_seen') || Store.state.settings?.guidedTourSeen;
+      if (!seen) {
+        window.setTimeout(() => this.openGuidedTour(), 600);
+      }
+    },
+    openGuidedTour() {
+      this.currentTourSlide = 0;
+      this.showTourSlide(0);
+      document.getElementById('guidedTourBackdrop').classList.remove('hidden');
+    },
+    closeGuidedTour() {
+      document.getElementById('guidedTourBackdrop').classList.add('hidden');
+      localStorage.setItem('jurisflow_tour_seen', 'true');
+      Store.state.settings.guidedTourSeen = true;
+      Store.save();
+    },
+    showTourSlide(index) {
+      const slides = document.querySelectorAll('.tour-slide');
+      const dots = document.querySelectorAll('.tour-dot');
+      const total = slides.length;
+      if (index < 0) index = 0;
+      if (index >= total) {
+        this.closeGuidedTour();
+        this.toast('Apresentação concluída! Bom trabalho.', 'success');
+        return;
+      }
+      this.currentTourSlide = index;
+
+      slides.forEach((s, i) => s.classList.toggle('active', i === index));
+      dots.forEach((d, i) => d.classList.toggle('active', i === index));
+
+      const prevBtn = document.getElementById('tourPrevButton');
+      const nextBtn = document.getElementById('tourNextButton');
+      if (prevBtn) prevBtn.style.display = index > 0 ? 'inline-block' : 'none';
+      if (nextBtn) nextBtn.textContent = index === total - 1 ? '🚀 Concluir e Começar' : 'Próximo →';
     },
     renderMetrics() {
       const newIntimations = Store.state.intimations.filter(item => item.status === 'nova').length;
@@ -515,6 +986,42 @@ CPF: ${doc}`;
       document.getElementById('heroSummary').textContent = newIntimations || deadlines
         ? `${newIntimations} intimação(ões) nova(s) e ${deadlines} prazo(s) nos próximos sete dias precisam de conferência.`
         : 'Nenhuma ocorrência urgente foi identificada nas fontes ativas.';
+    },
+    renderWeeklyDistribution() {
+      const activeTasks = Store.state.tasks.filter(t => !TERMINAL_STATUSES.includes(t.status));
+      const dayCounts = [0, 0, 0, 0, 0];
+
+      activeTasks.forEach(task => {
+        if (!task.deadline) return;
+        const parts = String(task.deadline).split('-');
+        if (parts.length === 3) {
+          const d = new Date(Number(parts[0]), Number(parts[1]) - 1, Number(parts[2]));
+          if (!isNaN(d.getTime())) {
+            const dayOfWeek = d.getDay(); // 0 Dom, 1 Seg, 2 Ter, 3 Qua, 4 Qui, 5 Sex, 6 Sab
+            if (dayOfWeek >= 1 && dayOfWeek <= 5) {
+              dayCounts[dayOfWeek - 1]++;
+            }
+          }
+        }
+      });
+
+      const maxCount = Math.max(...dayCounts, 1);
+      const totalPrazos = dayCounts.reduce((a, b) => a + b, 0);
+      const avg = totalPrazos > 0 ? (totalPrazos / 5).toFixed(1) : '0.0';
+
+      for (let i = 0; i < 5; i++) {
+        const count = dayCounts[i];
+        const bar = document.getElementById(`chartBar${i}`);
+        if (bar) {
+          const pct = Math.max(25, Math.min(100, Math.round((count / maxCount) * 100)));
+          bar.style.height = `${pct}%`;
+          const valEl = bar.querySelector('.chart-val');
+          if (valEl) valEl.textContent = count;
+        }
+      }
+
+      const avgEl = document.getElementById('chartAvgStat');
+      if (avgEl) avgEl.textContent = avg;
     },
     renderPriorities() {
       const tasks = Store.state.tasks
@@ -541,7 +1048,61 @@ CPF: ${doc}`;
     },
     filteredIntimations() {
       const filter = this.inboxFilter;
-      return Store.state.intimations.filter(item => filter === 'all' || item.status === filter);
+      const sort = this.inboxSort || 'date-desc';
+
+      let items = Store.state.intimations.filter(item => {
+        if (filter === 'pendentes') return item.status !== 'prazo' && item.status !== 'tarefa' && item.status !== 'arquivada';
+        if (filter === 'prazo') return item.status === 'prazo' || item.status === 'tarefa';
+        if (filter === 'all') return true;
+        if (filter === 'nova') return item.status === 'nova';
+        if (filter === 'urgente') return Boolean(item.urgent || item.priority === 'urgente');
+        if (filter === 'importante') return Boolean(item.important);
+        if (filter === 'prazo-fatal') {
+          const act = classifyIntimationAct(item.text, item.title, item.type);
+          return item.fatalDeadline || act.days > 0;
+        }
+        return item.status === filter;
+      });
+
+      items.sort((a, b) => {
+        const actA = classifyIntimationAct(a.text, a.title, a.type);
+        const actB = classifyIntimationAct(b.text, b.title, b.type);
+        const fatalA = a.fatalDeadline || (actA.days > 0 ? addDays(a.publishedAt || isoDate(), actA.days) : null);
+        const fatalB = b.fatalDeadline || (actB.days > 0 ? addDays(b.publishedAt || isoDate(), actB.days) : null);
+
+        if (sort === 'deadline-asc') {
+          const dA = fatalA ? daysUntil(fatalA) : 99999;
+          const dB = fatalB ? daysUntil(fatalB) : 99999;
+          return dA - dB;
+        }
+        if (sort === 'deadline-desc') {
+          const dA = fatalA ? daysUntil(fatalA) : -99999;
+          const dB = fatalB ? daysUntil(fatalB) : -99999;
+          return dB - dA;
+        }
+        if (sort === 'priority-urgent') {
+          const urgA = (a.urgent || a.priority === 'urgente') ? 1 : 0;
+          const urgB = (b.urgent || b.priority === 'urgente') ? 1 : 0;
+          if (urgA !== urgB) return urgB - urgA;
+          return new Date(b.publishedAt || 0) - new Date(a.publishedAt || 0);
+        }
+        if (sort === 'priority-important') {
+          const impA = a.important ? 1 : 0;
+          const impB = b.important ? 1 : 0;
+          if (impA !== impB) return impB - impA;
+          return new Date(b.publishedAt || 0) - new Date(a.publishedAt || 0);
+        }
+        if (sort === 'date-asc') {
+          return new Date(a.publishedAt || 0) - new Date(b.publishedAt || 0);
+        }
+        if (sort === 'process') {
+          return String(a.process || '').localeCompare(String(b.process || ''));
+        }
+        // default: date-desc
+        return new Date(b.publishedAt || 0) - new Date(a.publishedAt || 0);
+      });
+
+      return items;
     },
     intimationParties(item) {
       const process = Store.state.processes.find(record => record.number === item.process);
@@ -551,14 +1112,45 @@ CPF: ${doc}`;
     },
     renderInbox() {
       const items = this.filteredIntimations();
+
+      const dateBtn = document.querySelector('button[data-inbox-sort-col="date"]');
+      const deadlineBtn = document.querySelector('button[data-inbox-sort-col="deadline"]');
+      const dateIcon = document.getElementById('inboxSortIconDate');
+      const deadlineIcon = document.getElementById('inboxSortIconDeadline');
+
+      if (dateBtn && dateIcon) {
+        dateBtn.classList.toggle('active', this.inboxSort === 'date-desc' || this.inboxSort === 'date-asc');
+        dateIcon.textContent = this.inboxSort === 'date-asc' ? '▲' : this.inboxSort === 'date-desc' ? '▼' : '↕';
+      }
+      if (deadlineBtn && deadlineIcon) {
+        deadlineBtn.classList.toggle('active', this.inboxSort === 'deadline-asc' || this.inboxSort === 'deadline-desc');
+        deadlineIcon.textContent = this.inboxSort === 'deadline-asc' ? '▲' : this.inboxSort === 'deadline-desc' ? '▼' : '↕';
+      }
+
       document.getElementById('inboxList').innerHTML = items.length ? items.map(item => {
         const act = classifyIntimationAct(item.text, item.title, item.type);
+        const fatalDate = item.fatalDeadline || (act.days > 0 ? addDays(item.publishedAt || isoDate(), act.days) : null);
+        const dLeft = fatalDate ? daysUntil(fatalDate) : null;
+        const chipClass = dLeft !== null && dLeft <= 3 ? 'danger' : dLeft !== null && dLeft <= 7 ? 'warning' : 'normal';
+        const urgentBadge = (item.urgent || item.priority === 'urgente') ? '<span class="badge-urgent">URGENTE</span>' : '';
+        const importantBadge = item.important ? '<span class="badge-important">IMPORTANTE</span>' : '';
+        const deadlineChip = fatalDate ? `<span class="deadline-chip ${chipClass}">${act.days ? `${act.days}d · ` : ''}fatal: ${formatDate(fatalDate)}</span>` : '<small style="color:var(--muted)">Sem prazo fatal</small>';
+
         return `
-        <button class="inbox-row ${this.selectedIntimation === item.id ? 'active' : ''}" data-intimation-id="${escapeHtml(item.id)}">
-          <span class="inbox-primary"><i class="unread-dot ${item.unread ? '' : 'read'}"></i><span><strong>${escapeHtml(item.title)}</strong><small class="inbox-case-line"><b>${escapeHtml(item.process || 'Sem processo vinculado')}</b>${this.intimationParties(item) ? `<em>· ${escapeHtml(this.intimationParties(item))}</em>` : '<em>· Partes ainda não identificadas</em>'}</small></span></span>
-          <span class="source-label"><span class="act-chip ${act.css}">${escapeHtml(act.label)}</span></span><span class="date-label">${formatDate(item.publishedAt)}</span><span>${this.statusChip(item.status)}</span>
+        <button class="inbox-row ${this.selectedIntimation === item.id ? 'active' : ''} ${(item.urgent || item.priority === 'urgente') ? 'is-urgent' : ''} ${item.important ? 'is-important' : ''}" data-intimation-id="${escapeHtml(item.id)}">
+          <span class="inbox-primary">
+            <i class="unread-dot ${item.unread ? '' : 'read'}"></i>
+            <span>
+              <div style="display:flex;align-items:center;flex-wrap:wrap;">${urgentBadge}${importantBadge}<strong>${escapeHtml(item.title)}</strong></div>
+              <small class="inbox-case-line"><b>${escapeHtml(item.process || 'Sem processo vinculado')}</b>${this.intimationParties(item) ? `<em>· ${escapeHtml(this.intimationParties(item))}</em>` : '<em>· Partes ainda não identificadas</em>'}</small>
+            </span>
+          </span>
+          <span class="source-label"><span class="act-chip ${act.css}">${escapeHtml(act.label)}</span></span>
+          <span class="deadline-label">${deadlineChip}</span>
+          <span class="date-label">${formatDate(item.publishedAt)}</span>
+          <span>${this.statusChip(item.status)}</span>
         </button>`;
-      }).join('') : '<div class="empty-detail"><span>✓</span><h3>Nenhuma ocorrência</h3><p>Não há intimações neste filtro.</p></div>';
+      }).join('') : '<div class="empty-detail"><span>✓</span><h3>Nenhuma ocorrência</h3><p>Não há intimações neste filtro ou ordenação.</p></div>';
       document.querySelectorAll('[data-intimation-id]').forEach(button => button.addEventListener('click', () => this.selectIntimation(button.dataset.intimationId)));
       if (this.selectedIntimation) this.renderIntimationDetail();
     },
@@ -578,19 +1170,74 @@ CPF: ${doc}`;
       const container = document.getElementById('intimationDetail');
       if (!item) return;
       const act = classifyIntimationAct(item.text, item.title, item.type);
+      const fatalDate = item.fatalDeadline || addDays(item.publishedAt || isoDate(), act.days);
+      const dLeft = daysUntil(fatalDate);
+      const isUrgent = Boolean(item.urgent || item.priority === 'urgente');
+      const isImportant = Boolean(item.important);
+
       container.innerHTML = `
-        <div class="detail-header"><div style="display:flex;gap:8px;align-items:center;">${this.statusChip(item.status)}<span class="act-chip ${act.css}">${escapeHtml(act.label)}</span></div><h2>${escapeHtml(item.title)}</h2><p>${escapeHtml(item.court || 'Origem judicial não informada')}</p></div>
-        <div class="detail-meta"><div><small>Processo</small><strong>${escapeHtml(item.process || 'Não identificado')}</strong></div><div><small>Partes</small><strong>${escapeHtml(this.intimationParties(item) || 'Ainda não identificadas')}</strong></div><div><small>Publicação</small><strong>${formatDate(item.publishedAt)}</strong></div><div><small>Ato estimado</small><strong>${escapeHtml(act.category)} (${act.days}d)</strong></div></div>
-        <p class="eyebrow">Texto original preservado</p><div class="original-text">${escapeHtml(item.text || 'Sem texto original.')}</div>
-        <div class="detail-actions">
+        <div class="detail-header">
+          <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:8px;">
+            ${this.statusChip(item.status)}
+            <span class="act-chip ${act.css}">${escapeHtml(act.label)}</span>
+            ${isUrgent ? '<span class="badge-urgent">URGENTE</span>' : ''}
+            ${isImportant ? '<span class="badge-important">IMPORTANTE</span>' : ''}
+          </div>
+          <h2>${escapeHtml(item.title)}</h2>
+          <p>${escapeHtml(item.court || 'Origem judicial não informada')}</p>
+        </div>
+        <div class="detail-meta">
+          <div><small>Processo</small><strong>${escapeHtml(item.process || 'Não identificado')}</strong></div>
+          <div><small>Partes</small><strong>${escapeHtml(this.intimationParties(item) || 'Ainda não identificadas')}</strong></div>
+          <div><small>Publicação</small><strong>${formatDate(item.publishedAt)}</strong></div>
+          <div><small>Prazo Fatal Estimado</small><strong>${formatDate(fatalDate)} (${act.days}d · ${dLeft >= 0 ? `${dLeft}d restantes` : 'vencido'})</strong></div>
+        </div>
+        <p class="eyebrow">Texto original preservado</p>
+        <div class="original-text">${escapeHtml(item.text || 'Sem texto original.')}</div>
+        <div class="detail-actions" style="display:flex;flex-wrap:wrap;gap:8px;">
+          <button class="button gold" data-detail-action="ai-analyze">✦ Analisar com IA</button>
+          <button class="button ghost btn-toggle-flag ${isUrgent ? 'active-urgent' : ''}" data-detail-action="toggle-urgent">${isUrgent ? 'Remover Urgência' : 'Marcar Urgente'}</button>
+          <button class="button ghost btn-toggle-flag ${isImportant ? 'active-important' : ''}" data-detail-action="toggle-important">${isImportant ? 'Remover Destaque' : 'Marcar Importante'}</button>
           <button class="button ghost" data-detail-action="edit">Editar dados</button>
           <button class="button ghost" data-detail-action="triagem">Marcar em triagem</button>
           <button class="button ghost" data-detail-action="prazo">Confirmar triagem</button>
-          <button class="button gold" data-detail-action="task">Criar tarefa (${act.days}d)</button>
+          <button class="button ghost" data-detail-action="task">Criar tarefa (${act.days}d)</button>
         </div>`;
       container.querySelectorAll('[data-detail-action]').forEach(button => button.addEventListener('click', () => this.handleIntimationAction(item, button.dataset.detailAction)));
     },
     handleIntimationAction(item, action) {
+      if (action === 'ai-analyze') {
+        this.switchView('assistant');
+        setTimeout(() => {
+          this.sendAiMessage(`Analise a seguinte intimação judicial recebida no sistema e responda com precisão:\n\n1. O que o magistrado/tribunal determinou?\n2. Qual é o prazo processual do CPC/CPP/CLT aplicável e como é feita a contagem em dias úteis?\n3. Qual é a medida judicial ou providência que o escritório deve adotar?\n\nProcesso: ${item.process || 'Não identificado'}\nTribunal: ${item.court || 'Não informado'}\nData da Publicação: ${formatDate(item.publishedAt)}\nTexto da Intimação:\n${item.text || ''}`);
+        }, 150);
+        return;
+      }
+      if (action === 'toggle-urgent') {
+        const currentlyUrgent = Boolean(item.urgent || item.priority === 'urgente');
+        if (currentlyUrgent) {
+          item.urgent = false;
+          item.priority = 'normal';
+        } else {
+          item.urgent = true;
+          item.priority = 'urgente';
+        }
+        Store.audit(item.urgent ? 'Marcada como urgente' : 'Urgência removida', item.title);
+        Store.save();
+        this.renderAll();
+        this.renderIntimationDetail();
+        this.toast(item.urgent ? 'Intimação marcada como URGENTE!' : 'Urgência removida com sucesso.', 'success');
+        return;
+      }
+      if (action === 'toggle-important') {
+        item.important = !item.important;
+        Store.audit(item.important ? 'Marcada como importante' : 'Destaque removido', item.title);
+        Store.save();
+        this.renderAll();
+        this.renderIntimationDetail();
+        this.toast(item.important ? 'Intimação marcada como IMPORTANTE!' : 'Destaque removido.', 'success');
+        return;
+      }
       if (action === 'edit') { this.openIntimationModal(item); return; }
       if (action === 'task') {
         const act = classifyIntimationAct(item.text, item.title, item.type);
@@ -603,14 +1250,21 @@ CPF: ${doc}`;
           source: item.source || 'DJEN',
           intimationId: item.id,
           deadline: suggestedDeadline,
-          priority: act.priority || 'normal',
+          priority: (item.urgent || act.priority === 'urgente') ? 'urgente' : 'normal',
           status: 'triagem'
         });
         return;
       }
       item.status = action;
       Store.audit(action === 'prazo' ? 'Triagem confirmada' : 'Intimação colocada em triagem', `${item.title} · ${item.process || 'sem processo'}`);
-      this.renderAll(); this.renderIntimationDetail();
+      Store.save();
+      this.renderAll();
+      if (this.selectedIntimation === item.id && this.inboxFilter === 'pendentes' && action === 'prazo') {
+        const remaining = this.filteredIntimations();
+        this.selectedIntimation = remaining[0]?.id || null;
+      }
+      this.renderIntimationDetail();
+      this.toast(action === 'prazo' ? 'Triagem confirmada! Intimação movida para Conferidas.' : 'Intimação em triagem.', 'success');
     },
     renderKanban() {
       const board = document.getElementById('kanbanBoard');
@@ -637,7 +1291,7 @@ CPF: ${doc}`;
       const overdue = daysUntil(task.deadline) < 0 && task.status !== 'concluida';
       const timeMins = totalTimeMinutes(task.timeLogs);
       const timeBadge = timeMins > 0 ? `<span class="task-timelog" title="Tempo total registrado na tarefa">⏱ ${formatMinutes(timeMins)}</span>` : '';
-      return `<article class="task-card" draggable="true" data-task-id="${escapeHtml(task.id)}"><div class="task-top"><span class="task-source">${escapeHtml(task.source || 'INTERNA')}</span><span>${Number(task.points) ? `<b class="task-points">${Number(task.points)} pts</b>` : ''}${timeBadge}${task.priority === 'urgente' ? '<span class="task-priority" title="Urgente">!</span>' : ''}</span></div><h4>${escapeHtml(task.title)}</h4><p>${escapeHtml(task.description || 'Sem descrição')}</p><div class="task-tags">${task.client ? `<span>${escapeHtml(task.client)}</span>` : ''}${task.process ? `<span>${escapeHtml(task.process)}</span>` : ''}</div>${task.fatalDeadline ? `<div class="fatal-date">Prazo fatal: ${formatDate(task.fatalDeadline)}</div>` : ''}<footer class="task-footer"><span class="task-date ${overdue ? 'overdue' : ''}">${overdue ? 'Atrasada · ' : ''}${formatDate(task.deadline)}</span><span class="task-avatar">${escapeHtml(this.initials(task.responsible || 'Responsável'))}</span></footer></article>`;
+      return `<article class="task-card" draggable="true" data-task-id="${escapeHtml(task.id)}"><div class="task-top"><span class="task-source">${escapeHtml(task.source || 'INTERNA')}</span><span>${Number(task.points) ? `<b class="task-points">${Number(task.points)} pts</b>` : ''}${timeBadge}${task.priority === 'urgente' ? '<span class="task-priority" title="Urgente">!</span>' : ''}</span></div><h4>${escapeHtml(task.title)}</h4><p>${escapeHtml(task.description || 'Sem descrição')}</p><div class="task-tags">${task.client ? `<span>${escapeHtml(task.client)}</span>` : ''}${task.process ? `<span>${escapeHtml(task.process)}</span>` : ''}</div>${task.fatalDeadline ? `<div class="fatal-date">Prazo fatal: ${formatDate(task.fatalDeadline)}</div>` : ''}<footer class="task-footer"><span class="task-date ${overdue ? 'overdue' : ''}">${overdue ? 'Atrasada · ' : ''}${formatDate(task.deadline)}</span><span class="task-avatar">${escapeHtml(this.initials(task.responsible || 'Ricardo'))}</span></footer></article>`;
     },
     moveTask(taskId, status) {
       const task = Store.state.tasks.find(item => item.id === taskId); if (!task || task.status === status) return;
@@ -647,20 +1301,27 @@ CPF: ${doc}`;
     },
     renderProcesses(query = '') {
       const needle = normalizeText(query);
-      let records = Store.state.processes.filter(item => !needle || normalizeText(`${item.number} ${item.client} ${item.court} ${item.county || ''} ${item.feeType || ''} ${item.registeredAt || item.createdAt || ''}`).includes(needle));
+      let records = Store.state.processes.filter(item => !needle || normalizeText(`${item.number} ${item.client} ${item.court} ${item.county || ''} ${item.registeredAt || item.createdAt || ''}`).includes(needle));
       records = sortRecords(records, this.processSort);
       updateTableSortHeaders('processTable', this.processSort);
       document.getElementById('processTableBody').innerHTML = records.length ? records.map(item => {
         const regDate = item.registeredAt || item.createdAt;
-        const feeLabel = item.feePercentage ? `${item.feePercentage}% êxito` : item.feeAmount ? `R$ ${Number(item.feeAmount).toLocaleString('pt-BR')}` : item.feeType ? item.feeType.toUpperCase() : '';
-        const feeStatusClass = item.feeStatus === 'quitado' || item.feeStatus === 'em_dia' ? 'fee-status-paid' : item.feeStatus === 'pendente' ? 'fee-status-pending' : 'fee-status-waiting';
-        const feeBadge = item.feeType ? `<span class="fee-chip ${escapeHtml(item.feeType)}">${escapeHtml(feeLabel)}<span class="fee-status-badge ${feeStatusClass}">${escapeHtml(item.feeStatus || 'regular')}</span></span>` : '';
+        let feeBadge = '';
+        if (item.feeAmount && Number(item.feeAmount) > 0) {
+          feeBadge = `<span class="fee-chip fixo">Valor: R$ ${Number(item.feeAmount).toLocaleString('pt-BR')}</span>`;
+        } else if (item.feePercentage && Number(item.feePercentage) > 0) {
+          const feeStatusClass = item.feeStatus === 'quitado' || item.feeStatus === 'em_dia' ? 'fee-status-paid' : item.feeStatus === 'pendente' ? 'fee-status-pending' : 'fee-status-waiting';
+          feeBadge = `<span class="fee-chip ${escapeHtml(item.feeType || 'exito')}">${escapeHtml(item.feePercentage)}% êxito<span class="fee-status-badge ${feeStatusClass}">${escapeHtml(item.feeStatus || 'regular')}</span></span>`;
+        } else if (item.feeType && item.feeType !== 'exito' && item.feeType !== 'none') {
+          const feeStatusClass = item.feeStatus === 'quitado' || item.feeStatus === 'em_dia' ? 'fee-status-paid' : item.feeStatus === 'pendente' ? 'fee-status-pending' : 'fee-status-waiting';
+          feeBadge = `<span class="fee-chip ${escapeHtml(item.feeType)}">${escapeHtml(item.feeType.toUpperCase())}<span class="fee-status-badge ${feeStatusClass}">${escapeHtml(item.feeStatus || 'regular')}</span></span>`;
+        }
         return `
         <tr data-process-id="${escapeHtml(item.id)}" tabindex="0">
           <td><strong>${escapeHtml(item.number || item.protocol || 'Sem número')}</strong><small>${item.secrecy ? 'Segredo de justiça' : 'Consulta pública'}${item.caseFolder ? ` · ${escapeHtml(item.caseFolder)}` : ''}</small></td>
           <td><strong>${escapeHtml(item.client)}</strong>${feeBadge ? `<br>${feeBadge}` : ''}</td>
           <td><strong>${escapeHtml(item.court || item.county || '—')}</strong><small>${escapeHtml([item.actionType, item.stage].filter(Boolean).join(' · '))}</small></td>
-          <td><strong>${formatDate(regDate)}</strong><small>${escapeHtml(item.source || 'ADVBOX')}</small></td>
+          <td><strong>${formatDate(regDate)}</strong><small>${escapeHtml(item.source || 'eproc / Cadastro')}</small></td>
           <td><strong>${escapeHtml(item.lastMovement || 'Sem movimentação')}</strong><small>${formatDate(item.lastMovementAt)}</small></td>
           <td>${item.monitoring === 'active' ? '<span class="status-chip connected">Monitorando</span>' : '<span class="status-chip warning">Atenção</span>'}</td>
         </tr>`;
@@ -706,17 +1367,36 @@ CPF: ${doc}`;
       document.getElementById('configurationHeading').textContent = label;
       document.getElementById('configurationCount').textContent = `${records.length} itens`;
       document.getElementById('configurationList').innerHTML = records.length ? records.map(({ item, index }) => this.configurationRow(item, index)).join('') : '<div class="empty-detail"><span>✓</span><h3>Nenhum item</h3><p>Não há registros nesta seção ou neste filtro.</p></div>';
-      document.querySelectorAll('#configurationList [data-config-index]').forEach(row => row.addEventListener('click', () => {
+      document.querySelectorAll('#configurationList [data-config-index]').forEach(row => row.addEventListener('click', (e) => {
+        if (e.target.closest('[data-delete-config]')) return;
         const index = Number(row.dataset.configIndex); const item = raw[index]; if (item !== undefined) this.openConfigurationModal(item, index);
       }));
     },
     configurationRow(item, index) {
-      if (typeof item === 'string') return `<button class="configuration-row" data-config-index="${index}"><strong>${escapeHtml(item)}</strong><span>Seção da caixa de entrada</span><small>Ativa · clique para editar</small></button>`;
+      if (typeof item === 'string') {
+        return `
+          <div class="configuration-row" data-config-index="${index}">
+            <div class="config-row-info">
+              <strong>${escapeHtml(item)}</strong>
+              <span>Seção da caixa de entrada</span>
+              <small>Ativa · clique para editar</small>
+            </div>
+            <button type="button" class="btn-delete-config-row" data-delete-config="${index}" title="Excluir este item">×</button>
+          </div>`;
+      }
       if (!item || typeof item !== 'object') return '';
       const primary = item.name || item.event || item.group || 'Configuração';
       const secondary = item.role || item.phase || item.group || item.publicationResponsible || item.method || (item.responsibles || []).join(', ') || item.status || '—';
       const meta = Number.isFinite(item.points) ? `<span class="config-points">${item.points} pontos</span>` : item.monthlyClosings == null && 'monthlyClosings' in item ? '<small>Meta não definida</small>' : `<small>${escapeHtml(item.registeredAt || item.status || 'Ativo')}</small>`;
-      return `<button class="configuration-row" data-config-index="${index}"><strong>${escapeHtml(primary)}</strong><span>${escapeHtml(secondary)}</span>${meta}</button>`;
+      return `
+        <div class="configuration-row" data-config-index="${index}">
+          <div class="config-row-info">
+            <strong>${escapeHtml(primary)}</strong>
+            <span>${escapeHtml(secondary)}</span>
+            ${meta}
+          </div>
+          <button type="button" class="btn-delete-config-row" data-delete-config="${index}" title="Excluir este item">×</button>
+        </div>`;
     },
     openIntimationDetailModal(item) {
       if (!item) return;
@@ -973,6 +1653,14 @@ CPF: ${doc}`;
       }
     },
     renderMonitoring() {
+      const term = Store.state.terms[0] || { name: 'Dr(a). Advogado(a) Titular', registration: 'OAB/UF 000000' };
+      const nameEl = document.getElementById('primaryTermName');
+      const regEl = document.getElementById('primaryTermRegistration');
+      const avatarEl = document.getElementById('primaryTermAvatar');
+      if (nameEl) nameEl.textContent = term.name || 'Dr(a). Advogado(a) Titular';
+      if (regEl) regEl.textContent = `${term.registration || 'OAB/UF 000000'} · Advogado(a) monitorado(a) principal`;
+      if (avatarEl) avatarEl.textContent = this.initials(term.name || 'AD');
+
       const issues = Store.state.sources.filter(source => ['attention', 'error'].includes(source.status)).length;
       document.getElementById('termSourceCount').textContent = Store.state.sources.length;
       document.getElementById('termIssueCount').textContent = issues;
@@ -984,7 +1672,9 @@ CPF: ${doc}`;
       }));
     },
     renderAudit() {
-      document.getElementById('auditList').innerHTML = Store.state.audit.map(item => `<div class="audit-item"><time>${formatDateTime(item.at)}</time><div><strong>${escapeHtml(item.action)}</strong><small>${escapeHtml(item.detail)}</small></div><small>${escapeHtml(item.actor)}</small></div>`).join('');
+      const list = document.getElementById('auditList');
+      if (!list) return;
+      list.innerHTML = Store.state.audit.map(item => `<div class="audit-item"><time>${formatDateTime(item.at)}</time><div><strong>${escapeHtml(item.action)}</strong><small>${escapeHtml(item.detail)}</small></div><small>${escapeHtml(item.actor)}</small></div>`).join('');
     },
     initials(value) { return String(value).trim().split(/\s+/).slice(0,2).map(part => part[0]).join('').toUpperCase(); },
     globalSearch(query) {
@@ -999,11 +1689,11 @@ CPF: ${doc}`;
       else if (intimationMatch) this.switchView('inbox');
       else if (taskMatch) this.switchView('kanban');
     },
-    openModal(mode, title, eyebrow, fields, defaults = {}) {
+    openModal(mode, title, eyebrow, fields, defaults = {}, topHtml = '') {
       this.modalMode = { mode, defaults };
       document.getElementById('modalTitle').textContent = title;
       document.getElementById('modalEyebrow').textContent = eyebrow;
-      document.getElementById('modalFields').innerHTML = `<div class="form-grid">${fields.map(field => {
+      document.getElementById('modalFields').innerHTML = `${topHtml}<div class="form-grid">${fields.map(field => {
         const value = defaults[field.name] ?? field.value ?? '';
         if (field.type === 'textarea') return `<div class="field ${field.full ? 'full' : ''}"><label for="field-${field.name}">${field.label}</label><textarea id="field-${field.name}" name="${field.name}" ${field.required ? 'required' : ''}>${escapeHtml(value)}</textarea>${field.note ? `<small class="field-note">${field.note}</small>` : ''}</div>`;
         if (field.type === 'select') return `<div class="field ${field.full ? 'full' : ''}"><label for="field-${field.name}">${field.label}</label><select id="field-${field.name}" name="${field.name}">${field.options.map(option => `<option value="${escapeHtml(option.value)}" ${String(value) === String(option.value) ? 'selected' : ''}>${escapeHtml(option.label)}</option>`).join('')}</select></div>`;
@@ -1018,25 +1708,81 @@ CPF: ${doc}`;
       const definitions = Store.state.configuration?.taskDefinitions || [];
       const totalTime = totalTimeMinutes(defaults.timeLogs);
       const timeNote = totalTime > 0 ? `Tempo total acumulado nesta tarefa: ${formatMinutes(totalTime)}.` : '';
+      const cleanDescription = decodeHtmlEntities(defaults.description || defaults.text || '');
+      const cleanTitle = decodeHtmlEntities(defaults.title || '');
+
+      let intimationCardHtml = '';
+      if (cleanDescription) {
+        intimationCardHtml = `
+        <div class="task-intimation-card">
+          <div class="task-intimation-header">
+            <div class="task-intimation-title">
+              <svg class="nav-svg" style="width:16px;height:16px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+              <span>Publicação / Texto da Intimação</span>
+            </div>
+            <div class="task-intimation-actions">
+              <button type="button" class="task-btn-action" id="btnCopyTaskIntimation">Copiar texto</button>
+              <button type="button" class="task-btn-action" id="btnAiAnalyzeTask">✦ Analisar com IA</button>
+            </div>
+          </div>
+          <div class="task-intimation-body" id="taskIntimationBody">${escapeHtml(cleanDescription)}</div>
+        </div>`;
+      }
+
       this.openModal('task', defaults.id ? 'Editar tarefa' : 'Nova tarefa', 'Fluxo interno', [
-        { name: 'taskDefinition', label: 'Definição de tarefa', type: 'select', full: true, options: [{ value: '', label: 'Selecione uma definição ADVBOX' }, ...definitions.map(item => ({ value: item.name, label: `${item.name} (${item.points} pts)` }))] },
-        { name: 'title', label: 'Título', required: true, full: true }, { name: 'client', label: 'Cliente' }, { name: 'process', label: 'Número do processo' },
-        { name: 'actionType', label: 'Tipo de ação' }, { name: 'protocol', label: 'Protocolo' },
-        { name: 'date', label: 'Data da atividade', type: 'date' }, { name: 'time', label: 'Horário', type: 'time' },
-        { name: 'deadline', label: 'Prazo interno', type: 'date' }, { name: 'fatalDeadline', label: 'Prazo fatal', type: 'date', note: 'Sempre sujeito à conferência humana.' },
-        { name: 'responsible', label: 'Responsável principal', value: 'Responsável' }, { name: 'responsibles', label: 'Outros responsáveis', placeholder: 'Separe os nomes por vírgula' },
-        { name: 'sender', label: 'Remetente / criador' }, { name: 'location', label: 'Local' }, { name: 'points', label: 'Pontuação', type: 'number', value: 0 },
-        { name: 'addMinutes', label: 'Apontar tempo (minutos)', type: 'number', placeholder: 'Ex: 45', note: timeNote },
-        { name: 'timeDescription', label: 'Atividade no apontamento', placeholder: 'Ex: Elaboração de petição inicial' },
-        { name: 'status', label: 'Coluna', type: 'select', options: KANBAN_COLUMNS.map(column => ({ value: column.id, label: column.title })) },
+        { name: 'title', label: 'Título da tarefa', required: true, full: true, placeholder: 'Ex: Manifestação sobre despacho do DJEN' },
+        { name: 'taskDefinition', label: 'Definição de modelo', type: 'select', options: [{ value: '', label: 'Selecione um modelo de tarefa' }, ...definitions.map(item => ({ value: item.name, label: `${item.name} (${item.points} pts)` }))] },
+        { name: 'process', label: 'Número do processo', placeholder: 'Ex: 5002086-73.2022.4.04.7133' },
+        { name: 'client', label: 'Cliente', placeholder: 'Ex: Roberto Roque Junges' },
+        { name: 'fatalDeadline', label: 'Prazo fatal', type: 'date', note: 'Prazo peremptório (sujeito à conferência humana).' },
+        { name: 'deadline', label: 'Prazo interno', type: 'date' },
+        { name: 'date', label: 'Data da atividade', type: 'date' },
+        { name: 'time', label: 'Horário', type: 'time' },
+        { name: 'responsible', label: 'Responsável principal', value: defaults.responsible || 'Ricardo' },
+        { name: 'responsibles', label: 'Outros responsáveis', placeholder: 'Separe os nomes por vírgula' },
+        { name: 'status', label: 'Coluna (Quadro Kanban)', type: 'select', options: KANBAN_COLUMNS.map(column => ({ value: column.id, label: column.title })) },
         { name: 'priority', label: 'Prioridade', type: 'select', options: [{value:'normal',label:'Normal'},{value:'importante',label:'Importante'},{value:'urgente',label:'Urgente'}] },
-        { name: 'description', label: 'Comentário / instruções', type: 'textarea', full: true, note: 'Nunca registre senha, QR code ou segredo do certificado neste campo.' }
-      ], { status: 'triagem', priority: 'normal', source: 'Interna', ...defaults, taskDefinition: defaults.taskDefinition || (definitions.some(item => item.name === defaults.title) ? defaults.title : ''), responsibles: Array.isArray(defaults.responsibles) ? defaults.responsibles.join(', ') : (defaults.responsibles || '') });
+        { name: 'points', label: 'Pontuação', type: 'number', value: defaults.points || 0 },
+        { name: 'addMinutes', label: 'Apontar tempo (minutos)', type: 'number', placeholder: 'Ex: 45', note: timeNote },
+        { name: 'timeDescription', label: 'Atividade no apontamento', placeholder: 'Ex: Elaboração de minuta recursal' },
+        { name: 'description', label: 'Comentário interno / orientações', type: 'textarea', full: true, note: 'Nunca registre senha, QR code ou segredo do certificado neste campo.' },
+        { name: 'actionType', label: 'Tipo de ação' },
+        { name: 'protocol', label: 'Protocolo / Local' }
+      ], {
+        status: 'triagem',
+        priority: 'normal',
+        source: 'Interna',
+        ...defaults,
+        title: cleanTitle,
+        description: cleanDescription,
+        taskDefinition: defaults.taskDefinition || (definitions.some(item => item.name === cleanTitle) ? cleanTitle : ''),
+        responsibles: Array.isArray(defaults.responsibles) ? defaults.responsibles.join(', ') : (defaults.responsibles || '')
+      }, intimationCardHtml);
+
       const selector = document.getElementById('field-taskDefinition');
       selector?.addEventListener('change', () => {
         const definition = definitions.find(item => item.name === selector.value); if (!definition) return;
-        document.getElementById('field-title').value = definition.name;
-        document.getElementById('field-points').value = definition.points;
+        if (document.getElementById('field-title')) document.getElementById('field-title').value = definition.name;
+        if (document.getElementById('field-points')) document.getElementById('field-points').value = definition.points;
+      });
+
+      document.getElementById('btnCopyTaskIntimation')?.addEventListener('click', async () => {
+        try {
+          await navigator.clipboard.writeText(cleanDescription);
+          this.toast('Texto da intimação copiado com sucesso!', 'success');
+        } catch {
+          this.toast('Não foi possível copiar o texto.', 'error');
+        }
+      });
+
+      document.getElementById('btnAiAnalyzeTask')?.addEventListener('click', () => {
+        this.closeModal();
+        this.switchView('assistant');
+        const aiInput = document.getElementById('aiChatInput');
+        if (aiInput) {
+          aiInput.value = `Por favor, analise a seguinte intimação judicial, calcule os prazos em dias úteis (CPC/2015) e sugira as providências jurídicas cabíveis:\n\n${cleanDescription}`;
+          aiInput.focus();
+        }
       });
     },
     openIntimationModal(defaults = {}) {
@@ -1106,10 +1852,79 @@ CPF: ${doc}`;
       this.openModal('configuration', index === null ? 'Novo item de configuração' : 'Editar configuração', 'Estrutura do escritório', fields, { ...values, _section: section, _index: index });
     },
     openTermModal(defaults = {}) {
-      this.openModal('term', defaults.id ? 'Editar termo monitorado' : 'Adicionar termo', 'Monitoramento', [
-        { name: 'name', label: 'Nome completo ou razão social', required: true, full: true }, { name: 'registration', label: 'OAB, CPF ou CNPJ', required: true },
-        { name: 'type', label: 'Tipo', type: 'select', options: [{value:'oab',label:'Inscrição OAB'},{value:'name',label:'Nome'},{value:'document',label:'CPF / CNPJ'}] }
-      ], { type: 'oab', ...defaults });
+      const reg = defaults.registration || '';
+      let defaultOab = defaults.oabNumber || '';
+      let defaultUf = defaults.oabUf || '';
+      if (!defaultOab && reg) {
+        const ufMatch = reg.match(/([A-Z]{2})/i);
+        if (ufMatch) defaultUf = ufMatch[1].toUpperCase();
+        const numMatch = reg.replace(/\D/g, '');
+        if (numMatch) defaultOab = numMatch;
+      }
+      if (!defaultUf) defaultUf = 'RS';
+
+      const UF_OPTIONS = [
+        { value: 'RS', label: 'RS — Rio Grande do Sul' },
+        { value: 'SP', label: 'SP — São Paulo' },
+        { value: 'SC', label: 'SC — Santa Catarina' },
+        { value: 'PR', label: 'PR — Paraná' },
+        { value: 'RJ', label: 'RJ — Rio de Janeiro' },
+        { value: 'MG', label: 'MG — Minas Gerais' },
+        { value: 'DF', label: 'DF — Distrito Federal' },
+        { value: 'BA', label: 'BA — Bahia' },
+        { value: 'GO', label: 'GO — Goiás' },
+        { value: 'PE', label: 'PE — Pernambuco' },
+        { value: 'CE', label: 'CE — Ceará' },
+        { value: 'ES', label: 'ES — Espírito Santo' },
+        { value: 'MT', label: 'MT — Mato Grosso' },
+        { value: 'MS', label: 'MS — Mato Grosso do Sul' },
+        { value: 'MA', label: 'MA — Maranhão' },
+        { value: 'PA', label: 'PA — Pará' },
+        { value: 'PB', label: 'PB — Paraíba' },
+        { value: 'RN', label: 'RN — Rio Grande do Norte' },
+        { value: 'AL', label: 'AL — Alagoas' },
+        { value: 'SE', label: 'SE — Sergipe' },
+        { value: 'PI', label: 'PI — Piauí' },
+        { value: 'TO', label: 'TO — Tocantins' },
+        { value: 'RO', label: 'RO — Rondônia' },
+        { value: 'AC', label: 'AC — Acre' },
+        { value: 'AM', label: 'AM — Amazonas' },
+        { value: 'AP', label: 'AP — Amapá' },
+        { value: 'RR', label: 'RR — Roraima' }
+      ];
+
+      this.openModal('term', defaults.id ? 'Editar termo monitorado' : 'Adicionar termo monitorado', 'Monitoramento DJEN & Tribunais', [
+        { name: 'name', label: 'Nome completo ou razão social', required: true, full: true, placeholder: 'Ex: André da Silva', value: defaults.name || '' },
+        { name: 'type', label: 'Tipo de identificador', type: 'select', full: true, options: [{ value: 'oab', label: 'Inscrição OAB (Advogado)' }, { value: 'document', label: 'CPF ou CNPJ' }, { value: 'name', label: 'Nome Textual' }] },
+        { name: 'oabNumber', label: 'Número da OAB (somente números)', placeholder: 'Ex: 135294', note: 'Digite somente os números da sua OAB (ex: 135294 ou 029238 com zero à esquerda se tiver menos de 6 dígitos).' },
+        { name: 'oabUf', label: 'Estado / Seccional (UF)', type: 'select', value: defaultUf, options: UF_OPTIONS },
+        { name: 'document', label: 'CPF ou CNPJ', placeholder: 'Ex: 000.000.000-00 ou 00.000.000/0001-00' }
+      ], { type: 'oab', oabNumber: defaultOab, oabUf: defaultUf, ...defaults });
+
+      const typeSelect = document.getElementById('field-type');
+      const oabNumberField = document.getElementById('field-oabNumber')?.closest('.field');
+      const oabUfField = document.getElementById('field-oabUf')?.closest('.field');
+      const docField = document.getElementById('field-document')?.closest('.field');
+
+      const updateFieldsVisibility = () => {
+        const val = typeSelect?.value || 'oab';
+        if (val === 'oab') {
+          if (oabNumberField) oabNumberField.style.display = '';
+          if (oabUfField) oabUfField.style.display = '';
+          if (docField) docField.style.display = 'none';
+        } else if (val === 'document') {
+          if (oabNumberField) oabNumberField.style.display = 'none';
+          if (oabUfField) oabUfField.style.display = 'none';
+          if (docField) docField.style.display = '';
+        } else {
+          if (oabNumberField) oabNumberField.style.display = 'none';
+          if (oabUfField) oabUfField.style.display = 'none';
+          if (docField) docField.style.display = 'none';
+        }
+      };
+
+      typeSelect?.addEventListener('change', updateFieldsVisibility);
+      updateFieldsVisibility();
     },
     openSourceModal(defaults = {}) {
       this.openModal('source', 'Detalhes da fonte', 'Monitoramento e integração', [
@@ -1207,15 +2022,12 @@ CPF: ${doc}`;
       if (!file) { status.textContent = 'Selecionar QR code'; return; }
       status.textContent = 'Lendo QR somente neste navegador…';
       try {
-        if (!('BarcodeDetector' in window)) throw new Error('Leitura automática indisponível neste navegador. Use a chave manual exibida pelo portal.');
+        if (!('BarcodeDetector' in window)) throw new Error('Leitura automática indisponível neste navegador. Cole a chave manual ou URL OTP no campo abaixo.');
         const detector = new BarcodeDetector({ formats: ['qr_code'] });
         const bitmap = await createImageBitmap(file);
         const codes = await detector.detect(bitmap); bitmap.close?.();
         const raw = codes.find(code => code.rawValue)?.rawValue || '';
-        if (!/^otpauth:\/\/totp\//i.test(raw)) {
-          if (/^otpauth-migration:/i.test(raw)) throw new Error('Esse é um QR de exportação do autenticador. Gere um QR novo no site do tribunal.');
-          throw new Error('A imagem não contém um QR TOTP de ativação reconhecido.');
-        }
+        if (!raw) throw new Error('A imagem não contém um QR Code legível.');
         document.getElementById('portalTotpSecret').value = raw;
         status.textContent = `${file.name} · QR lido com segurança`;
         document.getElementById('portalTotpCode').focus();
@@ -1303,12 +2115,503 @@ CPF: ${doc}`;
       for (let offset = 0; offset < bytes.length; offset += 32_768) binary += String.fromCharCode(...bytes.subarray(offset, offset + 32_768));
       return btoa(binary);
     },
+    openCalendarConfigModal() {
+      const url = Store.state.settings.calendarUrl || Store.state.settings.externalCalendarUrl || '';
+      const input = document.getElementById('calendarInputUrl');
+      if (input) input.value = url;
+      const statusBox = document.getElementById('calendarConfigStatus');
+      if (statusBox) { statusBox.className = 'calendar-sync-status hidden'; statusBox.textContent = ''; }
+      document.getElementById('calendarConfigBackdrop').classList.remove('hidden');
+      document.body.style.overflow = 'hidden';
+      setTimeout(() => input?.focus(), 50);
+    },
+    closeCalendarConfigModal() {
+      const backdrop = document.getElementById('calendarConfigBackdrop');
+      if (!backdrop || backdrop.classList.contains('hidden')) return;
+      backdrop.classList.add('hidden');
+      if (document.getElementById('modalBackdrop').classList.contains('hidden')) document.body.style.overflow = '';
+    },
+    async handleCalendarConfigSubmit(event) {
+      event.preventDefault();
+      const calendarUrl = document.getElementById('calendarInputUrl').value.trim();
+      const statusBox = document.getElementById('calendarConfigStatus');
+      const submitBtn = document.getElementById('calendarConfigSubmit');
+      if (!calendarUrl) return this.toast('Informe a URL da agenda em formato Webcal ou iCal.', 'error');
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Sincronizando…';
+      if (statusBox) {
+        statusBox.className = 'calendar-sync-status warning';
+        statusBox.textContent = 'Conectando e importando eventos da agenda externa…';
+        statusBox.classList.remove('hidden');
+      }
+
+      try {
+        const response = await window.KellerAuth.secureFetch('/api/calendar/configure', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+          body: JSON.stringify({ calendarUrl })
+        });
+        const data = await response.json().catch(() => ({}));
+        if (!response.ok) throw new Error(data.message || 'Falha ao salvar configuração da agenda.');
+
+        Store.state.settings.calendarUrl = calendarUrl;
+        Store.state.settings.externalCalendarUrl = calendarUrl;
+        Store.state.settings.calendarConfigured = true;
+        Store.audit('Agenda externa configurada', `${data.imported || 0} compromissos sincronizados.`);
+        Store.save();
+
+        if (statusBox) {
+          statusBox.className = data.error ? 'calendar-sync-status error' : 'calendar-sync-status success';
+          statusBox.textContent = data.message || 'Agenda sincronizada com sucesso!';
+        }
+        this.toast(data.message || 'Agenda configurada com sucesso!', data.error ? 'error' : 'success');
+
+        await this.syncAll();
+        setTimeout(() => this.closeCalendarConfigModal(), 1200);
+      } catch (error) {
+        if (statusBox) {
+          statusBox.className = 'calendar-sync-status error';
+          statusBox.textContent = error.message;
+        }
+        this.toast(error.message, 'error');
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Salvar e Sincronizar Agora';
+      }
+    },
+    async checkAiStatus() {
+      const chip = document.getElementById('aiKeyStatusChip');
+      const banner = document.getElementById('aiOnboardingBanner');
+      try {
+        const response = await window.KellerAuth.secureFetch('/api/ai/status', { headers: { Accept: 'application/json' } });
+        const data = await response.json().catch(() => ({}));
+        this.aiConfigured = Boolean(data.configured || Store.state.settings.geminiApiKey);
+        if (chip) {
+          chip.textContent = this.aiConfigured ? 'Chave Ativa' : 'Chave não configurada';
+          chip.className = this.aiConfigured ? 'status-chip connected' : 'status-chip warning';
+        }
+        if (banner) {
+          banner.style.display = this.aiConfigured ? 'none' : 'block';
+        }
+      } catch {
+        this.aiConfigured = Boolean(Store.state.settings.geminiApiKey);
+        if (chip) {
+          chip.textContent = this.aiConfigured ? 'Chave Ativa' : 'Chave não configurada';
+          chip.className = this.aiConfigured ? 'status-chip connected' : 'status-chip warning';
+        }
+      }
+    },
+    openGeminiKeyModal() {
+      const input = document.getElementById('geminiApiKeyInput');
+      if (input) input.value = Store.state.settings.geminiApiKey || '';
+      const feedback = document.getElementById('geminiKeyFeedback');
+      if (feedback) { feedback.className = 'gemini-key-feedback hidden'; feedback.textContent = ''; }
+      document.getElementById('geminiKeyBackdrop').classList.remove('hidden');
+      document.body.style.overflow = 'hidden';
+      setTimeout(() => input?.focus(), 50);
+    },
+    closeGeminiKeyModal() {
+      const backdrop = document.getElementById('geminiKeyBackdrop');
+      if (!backdrop || backdrop.classList.contains('hidden')) return;
+      backdrop.classList.add('hidden');
+      if (document.getElementById('modalBackdrop').classList.contains('hidden')) document.body.style.overflow = '';
+    },
+    async saveGeminiKey(apiKey) {
+      apiKey = String(apiKey || '').trim();
+      if (!apiKey || apiKey.length < 20) {
+        throw new Error('Chave inválida. Copie a chave completa gerada no Google AI Studio.');
+      }
+      const response = await window.KellerAuth.secureFetch('/api/ai/configure', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify({ apiKey })
+      });
+      const data = await response.json().catch(() => ({}));
+      if (!response.ok) throw new Error(data.message || 'Falha ao validar chave com o Google Gemini.');
+
+      if (data.revision) Store.revision = data.revision;
+      Store.state.settings.geminiApiKey = apiKey;
+      Store.audit('Chave Gemini configurada', `Assistente IA ativado com modelo ${data.model || 'gemini-2.5-flash'}.`);
+      await this.checkAiStatus();
+      return data;
+    },
+    async handleGeminiKeySubmit(event) {
+      event.preventDefault();
+      const key = document.getElementById('geminiApiKeyInput').value.trim();
+      const feedback = document.getElementById('geminiKeyFeedback');
+      const submitBtn = document.getElementById('geminiKeySubmit');
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Validando chave com Google…';
+      try {
+        const result = await this.saveGeminiKey(key);
+        if (feedback) {
+          feedback.className = 'gemini-key-feedback success';
+          feedback.textContent = result.message || 'Chave validada com sucesso!';
+          feedback.classList.remove('hidden');
+        }
+        this.toast('Assistente IA ativado com sucesso!', 'success');
+        setTimeout(() => this.closeGeminiKeyModal(), 1000);
+      } catch (error) {
+        if (feedback) {
+          feedback.className = 'gemini-key-feedback error';
+          feedback.textContent = error.message;
+          feedback.classList.remove('hidden');
+        }
+        this.toast(error.message, 'error');
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Validar e Salvar Chave';
+      }
+    },
+    async handleQuickAiKeySubmit() {
+      const input = document.getElementById('aiQuickKeyInput');
+      const btn = document.getElementById('btnSaveQuickAiKey');
+      const key = input.value.trim();
+      if (!key) return this.toast('Cole sua Gemini API Key antes de continuar.', 'error');
+      btn.disabled = true;
+      btn.textContent = 'Validando…';
+      try {
+        await this.saveGeminiKey(key);
+        input.value = '';
+        this.toast('Assistente Google Gemini ativado!', 'success');
+      } catch (error) {
+        this.toast(error.message, 'error');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Ativar Assistente Gratuito';
+      }
+    },
+    clearAiConversation() {
+      this.aiChatHistory = [];
+      const container = document.getElementById('aiChatMessages');
+      if (container) {
+        container.innerHTML = `
+          <div class="ai-message assistant-message">
+            <div class="message-avatar">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 2l2.4 7.2L22 12l-7.6 2.8L12 22l-2.4-7.2L2 12l7.6-2.8z"/>
+              </svg>
+            </div>
+            <div class="message-body">
+              <div class="message-text">
+                <p>Conversa reiniciada. Em que posso auxiliá-lo(a) agora com suas intimações, prazos ou minutas?</p>
+              </div>
+              <div class="message-meta">Assistente Atrium Senda</div>
+            </div>
+          </div>`;
+      }
+      this.toast('Conversa reiniciada.', 'success');
+    },
+    sendQuickPrompt(promptText) {
+      const input = document.getElementById('aiChatInput');
+      if (input) input.value = promptText;
+      this.sendAiMessage(promptText);
+    },
+    handleAiChatSubmit(event) {
+      event.preventDefault();
+      const input = document.getElementById('aiChatInput');
+      const message = input.value.trim();
+      if (!message) return;
+      input.value = '';
+      this.sendAiMessage(message);
+    },
+    async sendAiMessage(messageText) {
+      if (!messageText.trim()) return;
+      if (this.isAiTyping) return;
+
+      const container = document.getElementById('aiChatMessages');
+      if (!container) return;
+
+      if (!this.aiConfigured && !Store.state.settings.geminiApiKey) {
+        this.openGeminiKeyModal();
+        this.toast('Por favor, configure sua chave gratuita do Gemini para usar o assistente.', 'warning');
+        return;
+      }
+
+      const userDiv = document.createElement('div');
+      userDiv.className = 'ai-message user-message';
+      userDiv.innerHTML = `
+        <div class="message-avatar">EU</div>
+        <div class="message-body">
+          <div class="message-text">${escapeHtml(messageText).replace(/\n/g, '<br>')}</div>
+          <div class="message-meta">Você · ${new Intl.DateTimeFormat('pt-BR', { hour: '2-digit', minute: '2-digit' }).format(new Date())}</div>
+        </div>`;
+      container.appendChild(userDiv);
+
+      this.isAiTyping = true;
+      const typingDiv = document.createElement('div');
+      typingDiv.className = 'ai-message assistant-message ai-typing-row';
+      typingDiv.innerHTML = `
+        <div class="message-avatar">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 2l2.4 7.2L22 12l-7.6 2.8L12 22l-2.4-7.2L2 12l7.6-2.8z"/>
+          </svg>
+        </div>
+        <div class="message-body">
+          <div class="ai-typing-indicator">
+            <span>Assistente formulando resposta…</span>
+            <div class="ai-typing-dots"><span></span><span></span><span></span></div>
+          </div>
+        </div>`;
+      container.appendChild(typingDiv);
+      container.scrollTop = container.scrollHeight;
+
+      let context = {};
+      if (this.selectedIntimation) {
+        const item = Store.state.intimations.find(r => r.id === this.selectedIntimation);
+        if (item) context.intimation = item;
+      }
+
+      try {
+        const response = await window.KellerAuth.secureFetch('/api/ai/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+          body: JSON.stringify({
+            message: messageText,
+            context,
+            history: this.aiChatHistory.slice(-12)
+          })
+        });
+
+        const data = await response.json().catch(() => ({}));
+        if (!response.ok) throw new Error(data.message || 'Falha ao consultar a API do Google Gemini.');
+
+        typingDiv.remove();
+
+        const replyHtml = formatMarkdown(data.reply);
+        const assistantDiv = document.createElement('div');
+        assistantDiv.className = 'ai-message assistant-message';
+        assistantDiv.innerHTML = `
+          <div class="message-avatar">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 2l2.4 7.2L22 12l-7.6 2.8L12 22l-2.4-7.2L2 12l7.6-2.8z"/>
+            </svg>
+          </div>
+          <div class="message-body">
+            <div class="message-text">${replyHtml}</div>
+            <div class="message-meta">${data.model || 'Google Gemini Flash'} · ${new Intl.DateTimeFormat('pt-BR', { hour: '2-digit', minute: '2-digit' }).format(new Date())}</div>
+          </div>`;
+        container.appendChild(assistantDiv);
+
+        this.aiChatHistory.push({ role: 'user', text: messageText });
+        this.aiChatHistory.push({ role: 'assistant', text: data.reply });
+      } catch (error) {
+        typingDiv.remove();
+        const errDiv = document.createElement('div');
+        errDiv.className = 'ai-message assistant-message';
+        errDiv.innerHTML = `
+          <div class="message-avatar" style="background:rgba(255,77,79,0.2);color:#ff4d4f;border-color:rgba(255,77,79,0.4);">!</div>
+          <div class="message-body">
+            <div class="message-text" style="background:#201111;border-color:#4a1c1c;color:#ff8585;">
+              <p><strong>Erro na consulta ao Assistente IA:</strong> ${escapeHtml(error.message)}</p>
+              <p style="font-size:12px;margin-top:6px;color:#c59999;">Verifique se a sua chave do Google Gemini foi inserida corretamente ou acesse <a href="https://aistudio.google.com/app/apikey" target="_blank" style="color:var(--gold);text-decoration:underline;">Google AI Studio</a> para gerar uma nova chave gratuita.</p>
+            </div>
+          </div>`;
+        container.appendChild(errDiv);
+      } finally {
+        this.isAiTyping = false;
+        container.scrollTop = container.scrollHeight;
+      }
+    },
+    copyPrompt(promptText, buttonElement) {
+      if (!navigator.clipboard) {
+        this.toast('Área de transferência indisponível neste navegador.', 'error');
+        return;
+      }
+      navigator.clipboard.writeText(promptText).then(() => {
+        if (buttonElement) {
+          const originalText = buttonElement.innerHTML;
+          buttonElement.innerHTML = `
+            <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+            <span>Copiado!</span>`;
+          buttonElement.classList.add('copied');
+          setTimeout(() => {
+            buttonElement.innerHTML = originalText;
+            buttonElement.classList.remove('copied');
+          }, 2000);
+        }
+        this.toast('Prompt copiado para a área de transferência!', 'success');
+      }).catch(() => {
+        this.toast('Não foi possível copiar o texto do prompt.', 'error');
+      });
+    },
+    usePromptInAi(promptText) {
+      this.switchView('assistant');
+      const input = document.getElementById('aiChatInput');
+      if (input) {
+        input.value = promptText;
+        input.style.height = 'auto';
+        input.style.height = Math.min(Math.max(input.scrollHeight, 60), 200) + 'px';
+        input.focus();
+        setTimeout(() => {
+          input.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }, 100);
+      }
+      this.toast('Prompt carregado no Assistente IA! Complete com os fatos e envie.', 'success');
+    },
+    renderPrompts() {
+      const defaultPrompts = window.PROMPTS_DATA || [];
+      const customPrompts = Store.state.customPrompts || [];
+      const allPrompts = [...customPrompts, ...defaultPrompts];
+      const grid = document.getElementById('promptsGrid');
+      const chipsContainer = document.getElementById('promptsCategoryChips');
+      const categorySelect = document.getElementById('promptCategorySelect');
+      const countDisplay = document.getElementById('promptsCountDisplay');
+      const badgeNav = document.getElementById('promptCountBadge');
+      if (badgeNav) badgeNav.textContent = allPrompts.length;
+
+      // Monta as opções de categoria no select
+      const categories = ['all', ...new Set(allPrompts.map(p => p.category))];
+      if (categorySelect && (categorySelect.options.length <= 1 || categorySelect.options.length !== categories.length)) {
+        const curVal = categorySelect.value || 'all';
+        categorySelect.innerHTML = categories.map(cat => {
+          const label = cat === 'all' ? `Todas as Áreas (${allPrompts.length} prompts)` : cat;
+          return `<option value="${escapeHtml(cat)}">${escapeHtml(label)}</option>`;
+        }).join('');
+        if (categories.includes(curVal)) categorySelect.value = curVal;
+      }
+
+      // Monta os chips de categoria com as mais frequentes
+      const topCategories = ['all', ...[...new Set(allPrompts.map(p => p.category))].slice(0, 12)];
+      if (chipsContainer) {
+        chipsContainer.innerHTML = topCategories.map(cat => {
+          const isSelected = this.promptsFilter.category === cat;
+          const label = cat === 'all' ? 'Todas as Áreas' : cat;
+          return `<button type="button" class="prompt-chip ${isSelected ? 'active' : ''}" data-category="${escapeHtml(cat)}">${escapeHtml(label)}</button>`;
+        }).join('');
+      }
+
+      // Filtragem dinâmica
+      const searchNeedle = normalizeText(this.promptsFilter.search || '');
+      const filtered = allPrompts.filter(p => {
+        if (this.promptsFilter.category !== 'all' && p.category !== this.promptsFilter.category) return false;
+        if (this.promptsFilter.type !== 'all' && normalizeText(p.type) !== normalizeText(this.promptsFilter.type)) return false;
+        if (searchNeedle) {
+          const haystack = normalizeText(`${p.title} ${p.description} ${(p.tags || []).join(' ')} ${p.prompt}`);
+          if (!haystack.includes(searchNeedle)) return false;
+        }
+        return true;
+      });
+
+      if (countDisplay) {
+        countDisplay.textContent = `Mostrando ${filtered.length} de ${allPrompts.length} prompts`;
+      }
+
+      if (!grid) return;
+
+      if (!filtered.length) {
+        grid.innerHTML = `
+          <div class="prompts-empty card">
+            <div class="empty-icon">⌕</div>
+            <h3>Nenhum prompt encontrado</h3>
+            <p>Tente ajustar os termos da pesquisa ou selecione outra área do direito.</p>
+          </div>`;
+        return;
+      }
+
+      grid.innerHTML = filtered.map(p => {
+        const typeClass = p.type ? `type-${normalizeText(p.type).replace(/\s+/g, '-')}` : 'type-geral';
+        const tagsHtml = (p.tags || []).slice(0, 5).map(t => `<span class="prompt-tag">${escapeHtml(t)}</span>`).join('');
+        const customBadge = p.isCustom ? `<span class="prompt-cat-badge custom-prompt-badge">Personalizado</span>` : '';
+        const customActions = p.isCustom ? `
+          <button type="button" class="button ghost btn-edit-prompt" data-edit-prompt="${escapeHtml(p.id)}" title="Editar prompt">Editar</button>
+          <button type="button" class="button danger-ghost btn-delete-prompt" data-delete-prompt="${escapeHtml(p.id)}" title="Excluir prompt">Excluir</button>
+        ` : '';
+        return `
+          <article class="card prompt-card ${p.isCustom ? 'custom-card' : ''}" data-prompt-id="${escapeHtml(p.id)}">
+            <div class="prompt-card-top">
+              <div class="prompt-badges">
+                ${customBadge}
+                <span class="prompt-cat-badge">${escapeHtml(p.category)}</span>
+                <span class="prompt-type-badge ${typeClass}">${escapeHtml(p.type || 'Geral')}</span>
+              </div>
+            </div>
+            <h4 class="prompt-title">${escapeHtml(p.title)}</h4>
+            <p class="prompt-desc">${escapeHtml(p.description || 'Modelo especializado para aplicação prática jurídica.')}</p>
+            ${tagsHtml ? `<div class="prompt-tags-list">${tagsHtml}</div>` : ''}
+            <div class="prompt-box">
+              <pre class="prompt-text">${escapeHtml(p.prompt)}</pre>
+            </div>
+            <div class="prompt-card-actions">
+              <button type="button" class="button ghost btn-copy-prompt" data-copy-prompt="${escapeHtml(p.id)}" title="Copiar texto do prompt">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                  <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                </svg>
+                <span>Copiar</span>
+              </button>
+              <button type="button" class="button gold btn-use-prompt" data-use-prompt="${escapeHtml(p.id)}" title="Carregar no chat do Assistente IA">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M12 2l2.4 7.2L22 12l-7.6 2.8L12 22l-2.4-7.2L2 12l7.6-2.8z"/>
+                </svg>
+                <span>Usar na IA</span>
+              </button>
+              ${customActions}
+            </div>
+          </article>
+        `;
+      }).join('');
+    },
+    renderLinks() {
+      const customLinks = Store.state.customLinks || [];
+      const section = document.getElementById('customLinksSection');
+      const grid = document.getElementById('customLinksGrid');
+      if (!section || !grid) return;
+
+      if (!customLinks.length) {
+        section.classList.add('hidden');
+        grid.innerHTML = '';
+        return;
+      }
+
+      section.classList.remove('hidden');
+      grid.innerHTML = customLinks.map(link => {
+        let domain = '';
+        try { domain = new URL(link.url).hostname.replace(/^www\./, ''); } catch { domain = link.url; }
+        return `
+          <div class="link-card card custom-link-card">
+            <div class="link-card-header">
+              <div class="link-badge">${escapeHtml(link.category || 'Link Personalizado')}</div>
+              <div class="link-card-top-actions">
+                <a href="${escapeHtml(link.url)}" target="_blank" rel="noopener noreferrer" class="external-icon" title="Abrir link">↗</a>
+                <button type="button" class="btn-delete-link" data-delete-link="${escapeHtml(link.id)}" title="Excluir este link">×</button>
+              </div>
+            </div>
+            <h4>${escapeHtml(link.title)}</h4>
+            <p>${escapeHtml(link.description || 'Link personalizado adicionado ao escritório.')}</p>
+            <div class="link-card-meta">
+              <span class="link-domain">${escapeHtml(domain)}</span>
+              <a href="${escapeHtml(link.url)}" target="_blank" rel="noopener noreferrer" class="link-tag">Acessar</a>
+            </div>
+          </div>
+        `;
+      }).join('');
+    },
+    openNewPromptModal(defaults = {}) {
+      const categories = ['all', ...new Set((window.PROMPTS_DATA || []).map(p => p.category))].filter(c => c !== 'all');
+      this.openModal('prompt', defaults.id ? 'Editar prompt personalizado' : 'Novo prompt jurídico', 'Inteligência Artificial', [
+        { name: 'title', label: 'Título do prompt', required: true, full: true, placeholder: 'Ex: Recurso Especial — Violação ao CPC', value: defaults.title || '' },
+        { name: 'category', label: 'Área do Direito', required: true, placeholder: 'Ex: Cível, Previdenciário, Trabalhista...', value: defaults.category || 'Cível' },
+        { name: 'type', label: 'Tipo de Ação / Finalidade', type: 'select', options: [{value:'Redação',label:'Redação de Peça'},{value:'Análise',label:'Análise de Riscos / Fatos'},{value:'Pesquisa',label:'Pesquisa Jurisprudencial'},{value:'Assistente',label:'Assistente Estratégico'},{value:'Geral',label:'Geral'}], value: defaults.type || 'Redação' },
+        { name: 'tags', label: 'Palavras-chave / Tags', full: true, placeholder: 'Ex: apelação, cpc, tempestividade, omissão (separados por vírgula)', value: Array.isArray(defaults.tags) ? defaults.tags.join(', ') : (defaults.tags || '') },
+        { name: 'description', label: 'Resumo / Instruções de uso', full: true, placeholder: 'Ex: Estrutura especializada para demonstrar negativa de prestação jurisdicional.', value: defaults.description || '' },
+        { name: 'prompt', label: 'Texto completo do Prompt (com variáveis [CLIENTE], [FATO], etc.)', type: 'textarea', full: true, required: true, value: defaults.prompt || '', note: 'Você pode usar marcações entre colchetes como [PROCESSO], [FATOS] para orientar o preenchimento.' }
+      ], defaults);
+    },
+    openNewLinkModal(defaults = {}) {
+      this.openModal('link', defaults.id ? 'Editar link útil' : 'Adicionar novo link útil', 'Acesso rápido oficial', [
+        { name: 'title', label: 'Nome / Título da referência', required: true, full: true, placeholder: 'Ex: Código de Trânsito Brasileiro (CTB)', value: defaults.title || '' },
+        { name: 'url', label: 'Endereço Web (URL)', required: true, full: true, placeholder: 'Ex: https://www.planalto.gov.br/ccivil_03/leis/l9503compilado.htm', value: defaults.url || '' },
+        { name: 'category', label: 'Categoria', type: 'select', options: [{value:'Legislação',label:'Legislação & Códigos'},{value:'Jurisprudência',label:'Jurisprudência & Tribunais'},{value:'Ferramentas IA',label:'Ferramentas com IA'},{value:'Órgãos Públicos',label:'Órgãos Públicos / Cartórios'},{value:'Outros',label:'Outros Links'}], value: defaults.category || 'Legislação' },
+        { name: 'description', label: 'Descrição / O que é este link', type: 'textarea', full: true, placeholder: 'Ex: Lei Federal nº 9.503/1997 compilada com todas as normas de trânsito.', value: defaults.description || '' }
+      ], defaults);
+    },
     openGuideModal(type) {
-      const isCalendar = type === 'calendar';
-      this.openModal('guide', isCalendar ? 'Ativar agenda ADVBOX' : 'Ativar certificado A1', 'Configuração protegida', [
-        { name: 'instructions', label: isCalendar ? 'Como configurar' : 'Arquitetura do certificado', type: 'textarea', full: true, value: isCalendar
-          ? '1. Regenere a URL Webcal que foi exposta no chat.\n2. Copie .env.example para .env.\n3. Insira a URL em ADVBOX_WEBCAL_URL no seu próprio computador.\n4. Reinicie o servidor e clique em Sincronizar.\n\nA URL nunca deve ser salva no GitHub.'
-          : '1. Instale o certificado A1 somente no agente local.\n2. Defina A1_PFX_PATH e A1_PFX_PASSPHRASE fora do código.\n3. Cadastre a origem exata de cada portal em collector/portals.json.\n4. Execute primeiro em modo visível para concluir login, QR code ou 2FA.\n5. Agende a execução diária somente após validar cada fonte.\n\nO sistema nunca deve calcular ou confirmar prazo fatal sem revisão humana.' }
+      this.openModal('guide', 'Ativar certificado A1', 'Configuração protegida', [
+        { name: 'instructions', label: 'Arquitetura do certificado', type: 'textarea', full: true, value: '1. Instale o certificado A1 somente no agente local.\n2. Defina A1_PFX_PATH e A1_PFX_PASSPHRASE fora do código.\n3. Cadastre a origem exata de cada portal em collector/portals.json.\n4. Execute primeiro em modo visível para concluir login, QR code ou 2FA.\n5. Agende a execução diária somente após validar cada fonte.\n\nO sistema nunca deve calcular ou confirmar prazo fatal sem revisão humana.' }
       ], {});
       document.querySelector('#modalForm footer .button.gold').textContent = 'Entendi';
     },
@@ -1336,12 +2639,12 @@ CPF: ${doc}`;
       const data = Object.fromEntries(new FormData(event.currentTarget).entries());
       if (this.modalMode.mode === 'task') {
         const history = Array.isArray(this.modalMode.defaults.history) ? [...this.modalMode.defaults.history] : [];
-        history.push({ at: new Date().toISOString(), action: this.modalMode.defaults.id ? 'Tarefa atualizada' : 'Tarefa atribuída', actor: 'Responsável' });
+        history.push({ at: new Date().toISOString(), action: this.modalMode.defaults.id ? 'Tarefa atualizada' : 'Tarefa atribuída', actor: 'Ricardo' });
         const timeLogs = Array.isArray(this.modalMode.defaults.timeLogs) ? [...this.modalMode.defaults.timeLogs] : [];
         const addMinutes = Number(data.addMinutes);
         if (addMinutes > 0) {
-          timeLogs.push({ id: uid('time'), date: isoDate(), minutes: addMinutes, description: data.timeDescription || 'Trabalho realizado', actor: 'Responsável' });
-          history.push({ at: new Date().toISOString(), action: `Apontamento de tempo: ${formatMinutes(addMinutes)}`, actor: 'Responsável' });
+          timeLogs.push({ id: uid('time'), date: isoDate(), minutes: addMinutes, description: data.timeDescription || 'Trabalho realizado', actor: 'Ricardo' });
+          history.push({ at: new Date().toISOString(), action: `Apontamento de tempo: ${formatMinutes(addMinutes)}`, actor: 'Ricardo' });
         }
         delete data.addMinutes;
         delete data.timeDescription;
@@ -1352,7 +2655,7 @@ CPF: ${doc}`;
         Store.audit(this.modalMode.defaults.id ? 'Tarefa atualizada' : 'Tarefa atribuída', `${record.title}${record.process ? ` · ${record.process}` : ''}${record.points ? ` · ${record.points} pontos` : ''}${addMinutes > 0 ? ` · ${formatMinutes(addMinutes)} apontados` : ''}`);
       } else if (this.modalMode.mode === 'intimation') {
         const editing = Boolean(this.modalMode.defaults.id);
-        const record = { id: this.modalMode.defaults.id || uid('int'), status: this.modalMode.defaults.status || 'nova', unread: this.modalMode.defaults.unread ?? true, term: this.modalMode.defaults.term || 'Advogado Monitorado · OAB/UF 000000', createdAt: this.modalMode.defaults.createdAt || new Date().toISOString(), ...this.modalMode.defaults, ...data, updatedAt: new Date().toISOString() };
+        const record = { id: this.modalMode.defaults.id || uid('int'), status: this.modalMode.defaults.status || 'nova', unread: this.modalMode.defaults.unread ?? true, term: this.modalMode.defaults.term || 'Ricardo De Luca Rossetto · OAB/RS 135294', createdAt: this.modalMode.defaults.createdAt || new Date().toISOString(), ...this.modalMode.defaults, ...data, updatedAt: new Date().toISOString() };
         Store.upsert('intimations', record); Store.audit(editing ? 'Intimação atualizada' : 'Intimação registrada', `${record.title}${record.process ? ` · ${record.process}` : ''}`);
       } else if (this.modalMode.mode === 'process') {
         const editing = Boolean(this.modalMode.defaults.id);
@@ -1391,9 +2694,67 @@ CPF: ${doc}`;
         Store.audit(index === null || index === undefined || index === '' ? 'Configuração adicionada' : 'Configuração atualizada', `${section} · ${typeof record === 'string' ? record : record.name || record.event || record.group || 'item'}`);
       } else if (this.modalMode.mode === 'term') {
         const editing = Boolean(this.modalMode.defaults.id);
-        const record = { id: this.modalMode.defaults.id || uid('term'), active: true, ...this.modalMode.defaults, ...data, updatedAt: new Date().toISOString() }; Store.upsert('terms', record); Store.audit(editing ? 'Termo atualizado' : 'Termo adicionado', `${record.name} · ${record.registration}`);
+        let registration = data.registration;
+        let oabNumber = data.oabNumber ? String(data.oabNumber).replace(/\D/g, '') : '';
+        let oabUf = data.oabUf ? String(data.oabUf).toUpperCase() : '';
+        if (data.type === 'oab' && oabNumber) {
+          registration = `OAB/${oabUf || 'RS'} ${oabNumber}`;
+        } else if (!registration) {
+          registration = data.document || data.name;
+        }
+        const record = {
+          id: this.modalMode.defaults.id || uid('term'),
+          active: true,
+          ...this.modalMode.defaults,
+          ...data,
+          registration,
+          oabNumber: oabNumber || undefined,
+          oabUf: oabUf || undefined,
+          updatedAt: new Date().toISOString()
+        };
+        Store.upsert('terms', record);
+        if (Store.state.terms[0]?.id === record.id) {
+          Store.state.settings.lawyerName = record.name;
+          Store.state.settings.lawyerOab = record.registration;
+        }
+        Store.audit(editing ? 'Termo atualizado' : 'Termo adicionado', `${record.name} · ${record.registration}`);
       } else if (this.modalMode.mode === 'source') {
         const record = { ...this.modalMode.defaults, ...data, updatedAt: new Date().toISOString() }; Store.upsert('sources', record); Store.audit('Fonte atualizada', `${record.name} · ${record.status}`);
+      } else if (this.modalMode.mode === 'prompt') {
+        const isEditing = Boolean(this.modalMode.defaults.id);
+        const record = {
+          id: this.modalMode.defaults.id || uid('prompt'),
+          isCustom: true,
+          title: data.title || 'Prompt sem título',
+          category: data.category || 'Geral',
+          type: data.type || 'Geral',
+          description: data.description || '',
+          tags: String(data.tags || '').split(/[,;]/).map(t => t.trim()).filter(Boolean),
+          prompt: data.prompt || '',
+          createdAt: this.modalMode.defaults.createdAt || new Date().toISOString(),
+          updatedAt: new Date().toISOString()
+        };
+        Store.state.customPrompts = Store.state.customPrompts || [];
+        const idx = Store.state.customPrompts.findIndex(p => p.id === record.id);
+        if (idx >= 0) Store.state.customPrompts[idx] = record;
+        else Store.state.customPrompts.unshift(record);
+        Store.audit(isEditing ? 'Prompt personalizado atualizado' : 'Prompt personalizado criado', record.title);
+      } else if (this.modalMode.mode === 'link') {
+        const isEditing = Boolean(this.modalMode.defaults.id);
+        const record = {
+          id: this.modalMode.defaults.id || uid('link'),
+          title: data.title || 'Link sem título',
+          url: data.url || '#',
+          category: data.category || 'Legislação',
+          description: data.description || '',
+          createdAt: this.modalMode.defaults.createdAt || new Date().toISOString(),
+          updatedAt: new Date().toISOString()
+        };
+        Store.state.customLinks = Store.state.customLinks || [];
+        const idx = Store.state.customLinks.findIndex(l => l.id === record.id);
+        if (idx >= 0) Store.state.customLinks[idx] = record;
+        else Store.state.customLinks.unshift(record);
+        Store.audit(isEditing ? 'Link útil atualizado' : 'Link útil adicionado', record.title);
       }
       Store.save(); this.closeModal(); this.renderAll(); this.toast('Registro salvo com sucesso.', 'success');
     },
@@ -1463,6 +2824,101 @@ CPF: ${doc}`;
       URL.revokeObjectURL(url);
       this.toast(`Arquivo ${filename} baixado com sucesso.`, 'success');
     },
+    async handleSpreadsheetUpload(file) {
+      if (!file) return;
+      this.toast('Analisando estrutura da planilha…');
+      try {
+        const isCsv = file.name.toLowerCase().endsWith('.csv');
+        let payload = {};
+        if (isCsv) {
+          const content = await file.text();
+          payload = { filename: file.name, content };
+        } else {
+          const buffer = await file.arrayBuffer();
+          let binary = '';
+          const bytes = new Uint8Array(buffer);
+          const len = bytes.byteLength;
+          for (let i = 0; i < len; i++) binary += String.fromCharCode(bytes[i]);
+          const base64 = btoa(binary);
+          payload = { filename: file.name, base64 };
+        }
+
+        const response = await window.KellerAuth.secureFetch('/api/import/spreadsheet', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        if (!response.ok) {
+          const err = await response.json().catch(() => ({}));
+          throw new Error(err.message || 'Não foi possível ler a planilha.');
+        }
+
+        const result = await response.json();
+        this.importedSpreadsheetData = result;
+        this.renderSpreadsheetPreview(result);
+        this.toast(`Planilha lida: ${result.totalRows} linha(s) encontrada(s).`, 'success');
+      } catch (error) {
+        this.toast(error.message || 'Falha ao processar arquivo.', 'error');
+      }
+    },
+    renderSpreadsheetPreview(data) {
+      const card = document.getElementById('importerPreviewCard');
+      if (!card) return;
+      card.classList.remove('hidden');
+      document.getElementById('importerFileLabel').textContent = `Arquivo: ${data.filename || 'Planilha'}`;
+      document.getElementById('importerSummaryTitle').textContent = `${data.totalRows} linha(s) identificada(s)`;
+
+      const badges = [];
+      if (data.processes?.length) badges.push(`<span class="status-chip connected">⚖️ ${data.processes.length} Processo(s)</span>`);
+      if (data.contacts?.length) badges.push(`<span class="status-chip planned">👥 ${data.contacts.length} Contato(s)</span>`);
+      if (data.tasks?.length) badges.push(`<span class="status-chip warning">📅 ${data.tasks.length} Tarefa(s) / Prazo(s)</span>`);
+      document.getElementById('importerBadges').innerHTML = badges.join('');
+
+      const previewRows = data.preview || [];
+      if (!previewRows.length) return;
+      const headers = Object.keys(previewRows[0]);
+      document.getElementById('importerPreviewHead').innerHTML = `<tr>${headers.map(h => `<th>${escapeHtml(h)}</th>`).join('')}</tr>`;
+      document.getElementById('importerPreviewBody').innerHTML = previewRows.map(row => `
+        <tr>${headers.map(h => `<td>${escapeHtml(String(row[h] || '—'))}</td>`).join('')}</tr>
+      `).join('');
+
+      card.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    },
+    cancelSpreadsheetImport() {
+      this.importedSpreadsheetData = null;
+      document.getElementById('importerPreviewCard')?.classList.add('hidden');
+      const input = document.getElementById('importerFileInput');
+      if (input) input.value = '';
+      this.toast('Importação descartada.');
+    },
+    commitSpreadsheetImport() {
+      const data = this.importedSpreadsheetData;
+      if (!data) return;
+      let countProc = 0;
+      let countCont = 0;
+      let countTasks = 0;
+
+      (data.processes || []).forEach(proc => {
+        Store.upsert('processes', proc, 'number');
+        countProc++;
+      });
+      (data.contacts || []).forEach(cont => {
+        Store.upsert('contacts', cont, 'name');
+        countCont++;
+      });
+      (data.tasks || []).forEach(task => {
+        Store.upsert('tasks', task, 'title');
+        countTasks++;
+      });
+
+      Store.audit('Importação de planilha concluída', `${countProc} processos, ${countCont} contatos e ${countTasks} tarefas consolidados.`);
+      Store.save();
+      this.renderAll();
+      this.cancelSpreadsheetImport();
+      this.toast(`Importação concluída: ${countProc} processos, ${countCont} contatos e ${countTasks} tarefas importados!`, 'success');
+      if (countProc > 0) this.switchView('processes');
+      else if (countCont > 0) this.switchView('contacts');
+    },
     async checkServerStatus() {
       try {
         const response = await window.KellerAuth.secureFetch('/api/status', { headers: { Accept: 'application/json' } });
@@ -1492,10 +2948,11 @@ CPF: ${doc}`;
       buttons.forEach(button => { if (button) button.disabled = true; });
       if (!silent) this.toast('Iniciando sincronização protegida…');
       try {
+        await Store.flush();
         const response = await window.KellerAuth.secureFetch('/api/sync', { method: 'POST', headers: { Accept: 'application/json' } });
         const data = await response.json().catch(() => ({}));
         if (!response.ok) throw new Error(data.message || 'Servidor de integração indisponível.');
-        if (Store.state.settings.demoMode && Number(data.imported) > 0) {
+        if (Store.state.settings.demoMode && (Number(data.imported) > 0 || (data.intimations && data.intimations.length > 0))) {
           ['agenda', 'tasks', 'intimations', 'processes'].forEach(collection => {
             Store.state[collection] = Store.state[collection].filter(item => !String(item.id || '').includes('demo'));
           });
@@ -1504,11 +2961,12 @@ CPF: ${doc}`;
         (data.tasks || []).forEach(task => Store.upsert('tasks', task, 'externalId'));
         (data.intimations || []).forEach(item => Store.upsert('intimations', item, 'externalId'));
         (data.processes || []).forEach(item => Store.upsert('processes', item, 'number'));
-        (data.sources || []).forEach(source => Store.upsert('sources', source));
-        if (Number(data.imported) > 0) Store.state.settings.demoMode = false;
-        Store.audit('Sincronização concluída', `${data.imported || 0} registro(s) processado(s).`, 'Sistema');
+        (data.sources || []).forEach(source => Store.upsert('sources', source, 'id'));
+        if (Number(data.imported) > 0 || (data.intimations && data.intimations.length > 0)) Store.state.settings.demoMode = false;
+        Store.audit('Sincronização concluída', `${data.imported || (data.intimations?.length || 0)} registro(s) processado(s).`, 'Sistema');
+        Store.save();
         this.renderAll();
-        if (!silent) this.toast('Sincronização concluída.', 'success');
+        if (!silent) this.toast('Sincronização concluída com sucesso.', 'success');
       } catch (error) {
         if (!silent) this.toast(error.message || 'Não foi possível sincronizar.', 'error');
       } finally {
@@ -1520,10 +2978,11 @@ CPF: ${doc}`;
       try {
         const payload = JSON.parse(await file.text());
         let imported = 0;
+        const defaultTerm = Store.state.terms[0] ? `${Store.state.terms[0].name} · ${Store.state.terms[0].registration}` : 'Advogado(a) Titular';
         if (Array.isArray(payload)) {
           payload.forEach(record => {
             if (!record?.title && !record?.text) return;
-            Store.upsert('intimations', { id: record.id || uid('int'), source: record.source || 'Arquivo JSON', status: record.status || 'nova', unread: true, title: record.title || 'Intimação importada', process: record.process || '', client: record.client || '', court: record.court || '', publishedAt: record.publishedAt || isoDate(), text: record.text || record.description || '', term: record.term || 'Advogado Monitorado · OAB/UF 000000', createdAt: new Date().toISOString() });
+            Store.upsert('intimations', { id: record.id || uid('int'), source: record.source || 'Arquivo JSON', status: record.status || 'nova', unread: true, title: record.title || 'Intimação importada', process: record.process || '', client: record.client || '', court: record.court || '', publishedAt: record.publishedAt || isoDate(), text: record.text || record.description || '', term: record.term || defaultTerm, createdAt: new Date().toISOString() });
             imported++;
           });
         } else if (payload && typeof payload === 'object') {
@@ -1535,11 +2994,11 @@ CPF: ${doc}`;
               });
             }
             (payload.intimations || []).forEach(record => {
-              Store.upsert('intimations', { id: record.id || uid('int'), source: record.source || 'Arquivo JSON', status: record.status || 'nova', unread: true, title: record.title || 'Intimação importada', process: record.process || '', client: record.client || '', court: record.court || '', publishedAt: record.publishedAt || isoDate(), text: record.text || record.description || '', term: record.term || 'Advogado Monitorado · OAB/UF 000000', createdAt: new Date().toISOString(), ...record });
+              Store.upsert('intimations', { id: record.id || uid('int'), source: record.source || 'Arquivo JSON', status: record.status || 'nova', unread: true, title: record.title || 'Intimação importada', process: record.process || '', client: record.client || '', court: record.court || '', publishedAt: record.publishedAt || isoDate(), text: record.text || record.description || '', term: record.term || defaultTerm, createdAt: new Date().toISOString(), ...record });
               imported++;
             });
             (payload.tasks || []).forEach(record => {
-              Store.upsert('tasks', { id: record.id || uid('task'), title: record.title || 'Tarefa importada', status: record.status || 'triagem', source: record.source || 'Arquivo JSON', priority: record.priority || 'normal', responsible: record.responsible || 'Responsável', createdAt: new Date().toISOString(), ...record });
+              Store.upsert('tasks', { id: record.id || uid('task'), title: record.title || 'Tarefa importada', status: record.status || 'triagem', source: record.source || 'Arquivo JSON', priority: record.priority || 'normal', responsible: record.responsible || 'Advogado', createdAt: new Date().toISOString(), ...record });
               imported++;
             });
             (payload.processes || []).forEach(record => {
@@ -1552,7 +3011,7 @@ CPF: ${doc}`;
             });
             if (imported > 0) Store.state.settings.demoMode = false;
           } else if (payload.title || payload.text) {
-            Store.upsert('intimations', { id: payload.id || uid('int'), source: payload.source || 'Arquivo JSON', status: payload.status || 'nova', unread: true, title: payload.title || 'Intimação importada', process: payload.process || '', client: payload.client || '', court: payload.court || '', publishedAt: payload.publishedAt || isoDate(), text: payload.text || payload.description || '', term: payload.term || 'Advogado Monitorado · OAB/UF 000000', createdAt: new Date().toISOString(), ...payload });
+            Store.upsert('intimations', { id: payload.id || uid('int'), source: payload.source || 'Arquivo JSON', status: payload.status || 'nova', unread: true, title: payload.title || 'Intimação importada', process: payload.process || '', client: payload.client || '', court: payload.court || '', publishedAt: payload.publishedAt || isoDate(), text: payload.text || payload.description || '', term: payload.term || defaultTerm, createdAt: new Date().toISOString(), ...payload });
             imported++;
           }
         }
@@ -1574,9 +3033,11 @@ CPF: ${doc}`;
   const boot = () => {
     if (initialized) return;
     initialized = true;
-    App.init().catch(() => window.KellerAuth.logout());
+    App.init().catch(err => { console.error('App.init failed:', err); window.KellerAuth.logout(); });
   };
-  window.KellerCentral = { App, Store };
+  window.AtriumSenda = { App, Store };
+  window.JurisFlow = window.AtriumSenda;
+  window.KellerCentral = window.AtriumSenda;
   window.addEventListener('keller:authenticated', boot);
   if (window.KellerAuth?.authenticated) boot();
 })();

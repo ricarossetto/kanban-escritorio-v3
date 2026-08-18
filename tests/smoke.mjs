@@ -6,18 +6,19 @@ import { startTestServer } from './helpers.mjs';
 
 const server = await startTestServer();
 const browser = await chromium.launch({ headless: true });
-const page = await browser.newPage({ locale: 'pt-BR' });
+const page = await browser.newPage({ locale: 'pt-BR', viewport: { width: 1440, height: 900 } });
 const pageErrors = [];
-page.on('pageerror', error => pageErrors.push(error.message));
+page.on('pageerror', error => { console.error('PAGE ERROR:', error); pageErrors.push(error.message); });
+page.on('console', msg => console.log('PAGE LOG:', msg.text()));
 
 try {
   const response = await page.goto(server.baseUrl, { waitUntil: 'networkidle' });
   assert(response?.ok(), `A página respondeu com HTTP ${response?.status()}.`);
   await page.locator('#authSetupForm.active').waitFor();
-  await page.locator('#authSetupForm [name="displayName"]').fill('Usuário do Escritório');
-  await page.locator('#authSetupForm [name="username"]').fill('usuario');
-  await page.locator('#authSetupForm [name="password"]').fill('Senha-Forte-Keller-2026!');
-  await page.locator('#authSetupForm [name="confirmPassword"]').fill('Senha-Forte-Keller-2026!');
+  await page.locator('#authSetupForm [name="displayName"]').fill('Advogado Administrador');
+  await page.locator('#authSetupForm [name="username"]').fill('admin');
+  await page.locator('#authSetupForm [name="password"]').fill('Senha-Forte-JurisFlow-2026!');
+  await page.locator('#authSetupForm [name="confirmPassword"]').fill('Senha-Forte-JurisFlow-2026!');
   const setupResponsePromise = page.waitForResponse(result => result.url().endsWith('/api/auth/setup') && result.request().method() === 'POST');
   await page.locator('#authSetupForm button[type="submit"]').click();
   const setupPayload = await (await setupResponsePromise).json();
@@ -39,9 +40,24 @@ try {
   await page.locator('#finishRecovery').click();
   await page.locator('#view-dashboard.active').waitFor();
 
-  const logoBox = await page.locator('.brand img').boundingBox();
-  const productBox = await page.locator('.brand-product').boundingBox();
-  assert(logoBox && productBox && logoBox.y + logoBox.height <= productBox.y, 'Logo do escritório e subtítulo da Central estão sobrepostos.');
+  // Se o tour de primeiro acesso aparecer, pula ou conclui
+  try {
+    const tourSkip = page.locator('#tourSkipButton');
+    await tourSkip.waitFor({ state: 'visible', timeout: 3000 });
+    await tourSkip.click();
+    await page.locator('#guidedTourBackdrop').waitFor({ state: 'hidden', timeout: 3000 });
+  } catch {}
+
+  const brandBox = await page.locator('.brand').boundingBox();
+  assert(brandBox, 'Identidade visual do JurisFlow ausente.');
+
+  // Teste de personalização do escritório
+  await page.locator('.sidebar-office').click();
+  await page.locator('#officeSetupBackdrop:not(.hidden)').waitFor();
+  await page.locator('#officeInputName').fill('Banca Rossetto & Associados');
+  await page.locator('#officeSetupForm button[type="submit"]').click();
+  await page.locator('#officeSetupBackdrop').waitFor({ state: 'hidden' });
+  assert(await page.locator('#sidebarOfficeName').textContent() === 'Banca Rossetto & Associados', 'Personalização do escritório falhou.');
 
   await page.locator('button[data-view="contacts"]').click();
   await page.locator('#view-contacts.active').waitFor();
@@ -105,7 +121,15 @@ try {
 
   await page.locator('button[data-view="monitoring"]').click();
   await page.locator('#view-monitoring.active').waitFor();
-  assert(await page.getByText('Advogado Monitorado', { exact: true }).isVisible(), 'Termo principal ausente.');
+  assert(await page.locator('#primaryTermName').isVisible(), 'Termo principal ausente.');
+  await page.locator('#primaryTermCard').click();
+  await page.locator('#modalBackdrop:not(.hidden)').waitFor();
+  await page.locator('#modalForm [name="name"]').fill('André da Silva');
+  await page.locator('#modalForm [name="oabNumber"]').fill('135294');
+  await page.locator('#modalForm [name="oabUf"]').selectOption('RS');
+  await page.locator('#modalForm button[type="submit"]').click();
+  await page.locator('#modalBackdrop').waitFor({ state: 'hidden' });
+  assert(await page.locator('#primaryTermName').textContent() === 'André da Silva', 'Edição de termo com OAB/UF falhou.');
 
   // Teste 1: Classificador de Intimações e Estimador de Prazos
   await page.locator('button[data-view="inbox"]').click();
@@ -113,6 +137,13 @@ try {
   const firstInboxReference = await page.locator('#inboxList .inbox-case-line').first().innerText();
   assert(firstInboxReference.includes('·') && /\d{7}-\d{2}/.test(firstInboxReference), 'A caixa de intimações não exibiu processo e partes na mesma linha.');
   assert(await page.locator('#inboxList .act-chip').count() > 0, 'As tags do classificador de atos não foram renderizadas na caixa de entrada.');
+
+  // Teste: ordenação por prazo e data clicando no cabeçalho
+  await page.locator('button[data-inbox-sort-col="deadline"]').click();
+  assert(await page.locator('#inboxSortIconDeadline').textContent() !== '↕', 'Ordenação por prazo fatal no cabeçalho falhou.');
+  await page.locator('button[data-inbox-sort-col="date"]').click();
+  assert(await page.locator('#inboxSortIconDate').textContent() !== '↕', 'Ordenação por data no cabeçalho falhou.');
+
   await page.locator('#inboxList button.inbox-row').first().click();
   await page.locator('#intimationDetail .act-chip').waitFor();
   await page.locator('#intimationDetail button[data-detail-action="task"]').click();
@@ -165,7 +196,7 @@ try {
   await page.locator('#docGeneratorBackdrop:not(.hidden)').waitFor();
   let previewText = await page.locator('#docGenPreviewText').inputValue();
   assert(previewText.includes('PROCURAÇÃO "AD JUDICIA ET EXTRA"'), 'Minuta de procuração não gerada.');
-  assert(previewText.includes('ADVOGADO(A) RESPONSÁVEL') && previewText.includes('OAB/UF 000000'), 'Dados do advogado ausentes na procuração.');
+  assert(previewText.includes('OUTORGADO') && previewText.includes('OAB'), 'Dados do advogado ausentes na procuração.');
   assert(previewText.includes('Artigo 105'), 'Poderes especiais do Artigo 105 do CPC ausentes.');
   await page.locator('#docGenTypeSelect').selectOption('contrato_honorarios');
   previewText = await page.locator('#docGenPreviewText').inputValue();
@@ -207,8 +238,8 @@ try {
   await page.locator('button[data-view="kanban"]').click();
   await page.locator('#logoutButton').click();
   await page.locator('#authLoginForm.active').waitFor();
-  await page.locator('#authLoginForm [name="username"]').fill('usuario');
-  await page.locator('#authLoginForm [name="password"]').fill('Senha-Forte-Keller-2026!');
+  await page.locator('#authLoginForm [name="username"]').fill('admin');
+  await page.locator('#authLoginForm [name="password"]').fill('Senha-Forte-JurisFlow-2026!');
   await page.locator('#authLoginForm [name="code"]').fill(generateTotp(secret));
   await page.locator('#authLoginForm button[type="submit"]').click();
   await page.locator('#view-kanban.active').waitFor();

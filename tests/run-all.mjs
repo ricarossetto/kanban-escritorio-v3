@@ -7,10 +7,12 @@ const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const checkFiles = [
   'server.mjs',
   'lib/security.mjs',
-  'scripts/import-advbox.mjs',
+  'scripts/import-spreadsheet.mjs',
   'scripts/migrate-judicial-secrets.mjs',
   'js/auth.js',
   'js/portal.js',
+  'js/prompts-data.js',
+  'js/office-data.js',
   'collector/agent.mjs',
   'collector/adapters/djen.mjs',
   'collector/adapters/datajud.mjs',
@@ -25,7 +27,7 @@ const checkFiles = [
 
 const testSuites = [
   { name: 'Segurança e Criptografia (Auth, TOTP, CSRF, AES-256-GCM)', file: 'tests/security.mjs' },
-  { name: 'Importador ADVBOX e Deduplicação (XLSX, PII protegido)', file: 'tests/importer.mjs' },
+  { name: 'Importador de Planilhas e Deduplicação (XLSX, PII protegido)', file: 'tests/importer.mjs' },
   { name: 'Políticas Supabase e Row Level Security (RLS AAL2)', file: 'tests/rls.mjs' },
   { name: 'Coletores Judiciais (DJEN, DataJud, PJe sem ciência auto)', file: 'tests/collector.mjs' },
   { name: 'Smoke Test E2E Playwright (Fluxo Completo UI / Kanban)', file: 'tests/smoke.mjs' }
@@ -45,7 +47,7 @@ async function runCommand(args, description) {
 }
 
 console.log('===============================================================');
-console.log('  KELLER CENTRAL JURÍDICA — VALIDAÇÃO E AUDITORIA COMPLETA');
+console.log('  ATRIUM SENDA — SUÍTE DE TESTES E AUDITORIA COMPLETA');
 console.log('===============================================================');
 
 let hasFailure = false;

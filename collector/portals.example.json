@@ -1,10 +1,10 @@
 {
-  "monitoredTerm": { "name": "Advogado Monitorado", "registration": "OAB/UF 000000" },
+  "monitoredTerm": { "name": "Ricardo De Luca Rossetto", "registration": "OAB/RS 135294" },
   "portals": [
     {
       "id": "djen-cnj", "name": "DJEN / Comunica PJe", "short": "DJ", "group": "Fontes nacionais", "system": "Comunica PJe",
       "enabled": true, "accountScoped": false, "url": "https://comunicaapi.pje.jus.br/api/v1/comunicacao", "strategy": "djen",
-      "ufOab": "RS", "numeroOab": "000000", "lookbackDays": 3, "queryOabVariants": true, "pageSize": 50, "maxPages": 40,
+      "ufOab": "", "numeroOab": "", "lookbackDays": 3, "queryOabVariants": true, "pageSize": 50, "maxPages": 40,
       "requestSpacingMs": 500, "usesCertificate": false
     },
     {
@@ -145,7 +145,7 @@
     },
     {
       "id": "legalone", "name": "Legal One", "group": "Sistemas do escritório", "enabled": false, "accountScoped": true,
-      "url": "https://seu-escritorio.novajus.com.br/", "dataUrl": "https://seu-escritorio.novajus.com.br/processos/processos/search",
+      "url": "https://kelleradv.novajus.com.br/", "dataUrl": "https://kelleradv.novajus.com.br/processos/processos/search",
       "strategy": "processes", "itemSelector": "table tbody tr", "usesCertificate": false
     }
   ]

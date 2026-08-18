@@ -9,10 +9,10 @@ import ExcelJS from 'exceljs';
 import { SecurityManager } from '../lib/security.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-const temp = await mkdtemp(path.join(os.tmpdir(), 'keller-import-test-'));
+const temp = await mkdtemp(path.join(os.tmpdir(), 'jurisflow-import-test-'));
 const sessionSecret = randomBytes(48).toString('base64url');
 const encryptionKey = randomBytes(32).toString('base64');
-const env = { ...process.env, KELLER_DATA_DIR: temp, AUTH_SESSION_SECRET: sessionSecret, AUTH_ENCRYPTION_KEY: encryptionKey };
+const env = { ...process.env, JURISFLOW_DATA_DIR: temp, KELLER_DATA_DIR: temp, AUTH_SESSION_SECRET: sessionSecret, AUTH_ENCRYPTION_KEY: encryptionKey };
 
 try {
   const contacts = path.join(temp, 'contatos.xlsx');
@@ -20,10 +20,10 @@ try {
   const activities = path.join(temp, 'atividades.xlsx');
   await workbook(contacts, ['Nome', 'CPF/CNPJ', 'E-mail', 'Celular'], [['Contato Teste', '00000000000', 'teste@example.invalid', '000000000']]);
   await workbook(processes, ['Nome do cliente', 'Número do processo', 'Tribunal', 'Último andamento'], [['Contato Teste', '0000000-00.2026.8.21.0000', 'TJRS', 'Movimento teste']]);
-  await workbook(activities, ['Prioridade', 'Data', 'Hora', 'Compromisso', 'Destinatário', 'Processo (CNJ)', 'Pontuação'], [['Alta', '17/08/2026', '09:30', 'AGRAVO DE INSTRUMENTO', 'Responsável', '0000000-00.2026.8.21.0000', 90]]);
+  await workbook(activities, ['Prioridade', 'Data', 'Hora', 'Compromisso', 'Destinatário', 'Processo (CNJ)', 'Pontuação'], [['Alta', '17/08/2026', '09:30', 'AGRAVO DE INSTRUMENTO', 'Advogado', '0000000-00.2026.8.21.0000', 90]]);
 
-  await run(['scripts/import-advbox.mjs', contacts, processes, activities]);
-  await run(['scripts/import-advbox.mjs', '--config-stdin'], JSON.stringify({ taskDefinitions: [{ name: 'AGRAVO DE INSTRUMENTO', points: 90 }], users: [{ name: 'Usuário Teste', role: 'Administrador' }] }) + '\n');
+  await run(['scripts/import-spreadsheet.mjs', contacts, processes, activities]);
+  await run(['scripts/import-spreadsheet.mjs', '--config-stdin'], JSON.stringify({ taskDefinitions: [{ name: 'AGRAVO DE INSTRUMENTO', points: 90 }], users: [{ name: 'Usuário Teste', role: 'Administrador' }] }) + '\n');
 
   const serialized = await readFile(path.join(temp, 'app-state.json'), 'utf8');
   assert.equal(serialized.includes('Contato Teste'), false, 'PII não pode aparecer em texto puro no arquivo de estado');
@@ -38,10 +38,10 @@ try {
   assert.equal(state.tasks[0].points, 90);
   assert.equal(state.tasks[0].fatalDeadline, '');
   assert.equal(state.configuration.taskDefinitions.length, 1);
-  console.log('✓ Importador ADVBOX: XLSX, deduplicação, pontuação e criptografia validados.');
+  console.log('✓ Importador de Planilhas: XLSX, deduplicação, pontuação e criptografia validados.');
 } finally {
   const resolved = path.resolve(temp);
-  if (!resolved.startsWith(path.resolve(os.tmpdir()) + path.sep) || !path.basename(resolved).startsWith('keller-import-test-')) throw new Error('Diretório temporário inesperado; limpeza cancelada.');
+  if (!resolved.startsWith(path.resolve(os.tmpdir()) + path.sep) || !path.basename(resolved).startsWith('jurisflow-import-test-')) throw new Error('Diretório temporário inesperado; limpeza cancelada.');
   await rm(resolved, { recursive: true, force: true });
 }
 
