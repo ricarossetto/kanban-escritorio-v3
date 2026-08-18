@@ -1,0 +1,24 @@
+services:
+  - type: web
+    name: keller-central-juridica
+    runtime: node
+    plan: free
+    buildCommand: npm install --omit=dev
+    startCommand: node server.mjs
+    healthCheckPath: /api/auth/status
+    autoDeployTrigger: commit
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: HOST
+        value: 0.0.0.0
+      - key: COOKIE_SECURE
+        value: "true"
+      - key: KELLER_CLOUD_MODE
+        value: preview
+      - key: KELLER_SKIP_COLLECTOR_ENV
+        value: "true"
+      - key: AUTH_SESSION_SECRET
+        generateValue: true
+      - key: AUTH_ENCRYPTION_KEY
+        generateValue: true

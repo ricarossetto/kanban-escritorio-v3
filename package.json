@@ -1,0 +1,26 @@
+{
+  "name": "keller-central-juridica",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Central local de intimações, processos, agenda e Kanban do escritório Keller Advogados.",
+  "scripts": {
+    "start": "node server.mjs",
+    "dev": "node server.mjs",
+    "collector": "node collector/agent.mjs",
+    "reset:judicial": "node scripts/reset-judicial-connections.mjs",
+    "import:advbox": "node scripts/import-advbox.mjs",
+    "check": "node --check server.mjs && node --check lib/security.mjs && node --check scripts/import-advbox.mjs && node --check scripts/migrate-judicial-secrets.mjs && node --check scripts/reset-judicial-connections.mjs && node --check js/auth.js && node --check js/portal.js && node --check collector/agent.mjs && node --check collector/adapters/djen.mjs && node --check collector/adapters/datajud.mjs && node --check collector/adapters/pje.mjs && node --check tests/helpers.mjs && node --check tests/security.mjs && node --check tests/importer.mjs && node --check tests/rls.mjs && node --check tests/collector.mjs && node --check tests/smoke.mjs && node --check tests/run-all.mjs",
+    "test:security": "node tests/security.mjs",
+    "test:importer": "node tests/importer.mjs",
+    "test:rls": "node tests/rls.mjs",
+    "test:collector": "node tests/collector.mjs",
+    "test:smoke": "node tests/smoke.mjs",
+    "test": "node tests/run-all.mjs"
+  },
+  "dependencies": {
+    "exceljs": "^4.4.0",
+    "playwright": "^1.56.0",
+    "qrcode": "^1.5.4"
+  }
+}
