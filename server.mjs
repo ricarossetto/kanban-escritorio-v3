@@ -747,7 +747,7 @@ function buildOfficeFullContext(state, runtime) {
 }
 
 async function callGeminiApi(apiKey, systemInstruction, contents) {
-  const models = ['gemini-2.0-flash-lite', 'gemini-2.5-flash', 'gemini-2.0-flash', 'gemini-1.5-flash'];
+  const models = ['gemini-3.5-flash-lite', 'gemini-2.5-flash', 'gemini-2.0-flash', 'gemini-1.5-flash'];
   let lastError = null;
 
   for (const model of models) {
@@ -782,7 +782,8 @@ async function callGeminiApi(apiKey, systemInstruction, contents) {
       return { text, model };
     } catch (err) {
       lastError = err;
-      if (String(err.message).includes('not found') || String(err.message).includes('404')) {
+      const msg = String(err.message).toLowerCase();
+      if (msg.includes('not found') || msg.includes('404') || msg.includes('no longer available') || msg.includes('deprecated') || msg.includes('is not supported')) {
         continue;
       }
       throw err;
