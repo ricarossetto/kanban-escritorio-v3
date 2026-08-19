@@ -1,4 +1,4 @@
-/* Atrium Senda — Biblioteca de Prompts Jurídicos Especializados (230 Prompts) */
+/* Central Keller — Biblioteca de Prompts Jurídicos Especializados */
 window.PROMPTS_DATA = [
   {
     "id": "p-1",

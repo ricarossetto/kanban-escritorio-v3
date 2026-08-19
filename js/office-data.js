@@ -1,4 +1,4 @@
-// Atrium Senda — Dataset Padrão de Configurações do Escritório (ADVBOX)
+// Central Keller — conjunto padrão de configurações do escritório
 (function (root, factory) {
   const data = factory();
   if (typeof module === 'object' && module.exports) {

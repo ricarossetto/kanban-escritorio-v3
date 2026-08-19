@@ -7,6 +7,7 @@ const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const checkFiles = [
   'server.mjs',
   'lib/security.mjs',
+  'lib/ai-context.mjs',
   'scripts/import-spreadsheet.mjs',
   'scripts/migrate-judicial-secrets.mjs',
   'js/auth.js',
@@ -22,6 +23,8 @@ const checkFiles = [
   'tests/importer.mjs',
   'tests/rls.mjs',
   'tests/collector.mjs',
+  'tests/features_validation.mjs',
+  'tests/ai-context.mjs',
   'tests/smoke.mjs'
 ];
 
@@ -30,6 +33,8 @@ const testSuites = [
   { name: 'Importador de Planilhas e Deduplicação (XLSX, PII protegido)', file: 'tests/importer.mjs' },
   { name: 'Políticas Supabase e Row Level Security (RLS AAL2)', file: 'tests/rls.mjs' },
   { name: 'Coletores Judiciais (DJEN, DataJud, PJe sem ciência auto)', file: 'tests/collector.mjs' },
+  { name: 'Catálogos ADVBOX/Legal One e regras de negócio', file: 'tests/features_validation.mjs' },
+  { name: 'Minimização de dados no contexto do assistente de IA', file: 'tests/ai-context.mjs' },
   { name: 'Smoke Test E2E Playwright (Fluxo Completo UI / Kanban)', file: 'tests/smoke.mjs' }
 ];
 
@@ -47,7 +52,7 @@ async function runCommand(args, description) {
 }
 
 console.log('===============================================================');
-console.log('  ATRIUM SENDA — SUÍTE DE TESTES E AUDITORIA COMPLETA');
+console.log('  CENTRAL KELLER — SUÍTE DE TESTES E AUDITORIA COMPLETA');
 console.log('===============================================================');
 
 let hasFailure = false;
@@ -95,6 +100,6 @@ if (hasFailure) {
   console.error('\nAlgumas suítes de teste falharam.');
   process.exit(1);
 } else {
-  console.log('\nTodas as 5 suítes de teste e verificações foram APROVADAS com sucesso!');
+  console.log(`\nTodas as ${testSuites.length} suítes de teste e verificações foram APROVADAS com sucesso!`);
   process.exit(0);
 }

@@ -46,8 +46,8 @@ O termo principal já vem protegido contra exclusão acidental: **Advogado Monit
 É necessário ter Node.js instalado.
 
 1. No PowerShell, entre nesta pasta.
-2. Execute `npm install`.
-3. Execute `npm start`.
+2. Execute `corepack enable` e `pnpm install --frozen-lockfile`.
+3. Execute `pnpm start`.
 4. Abra `http://127.0.0.1:4173`.
 
 Na primeira inicialização, o servidor cria automaticamente no `.env` três segredos aleatórios: assinatura de sessão, criptografia do TOTP e autenticação do coletor. O arquivo está excluído do Git e não pode ser servido pela aplicação.
@@ -70,7 +70,7 @@ O painel funciona sem configuração externa, inicialmente com dados claramente 
 O importador reconhece automaticamente os relatórios de contatos, processos e atividades, deduplica os registros e grava o resultado diretamente no estado AES-256-GCM. Os dados pessoais não são transformados em JSON público e não entram no Git.
 
 ```powershell
-pnpm import:advbox "C:\caminho\processos.xlsx" "C:\caminho\contatos.xlsx" "C:\caminho\atividades.xlsx"
+pnpm import:spreadsheet "C:\caminho\processos.xlsx" "C:\caminho\contatos.xlsx" "C:\caminho\atividades.xlsx"
 ```
 
 A ordem dos três arquivos é indiferente. As atividades viram tarefas do Kanban e compromissos de agenda; pontuação, destinatário, processo, protocolo, prazo fatal e conclusão são preservados quando existirem no relatório.

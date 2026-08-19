@@ -30,7 +30,7 @@
           <p class="eyebrow">Primeiro acesso</p><h2>Crie seu acesso mestre</h2>
           <p>Sua senha é privada e nunca deixa seu computador. Use uma frase forte e exclusiva.</p>
           <label>Nome de exibição<input name="displayName" autocomplete="name" placeholder="Dr(a). Advogado(a) Titular" required maxlength="100"></label>
-          <label>Usuário de acesso<input name="username" autocomplete="username" placeholder="admin" required pattern="[a-zA-Z0-9._-]{3,64}" maxlength="64"></label>
+          <label>Usuário de acesso<input name="username" autocomplete="username" placeholder="admin" required pattern="[a-zA-Z0-9._\x2d]{3,64}" maxlength="64"></label>
           <label>Senha forte<input name="password" type="password" autocomplete="new-password" required minlength="10" maxlength="128"></label>
           <label>Confirmar senha<input name="confirmPassword" type="password" autocomplete="new-password" required minlength="10" maxlength="128"></label>
           <small class="auth-hint">Mínimo de 10 caracteres contendo letras maiúsculas, minúsculas, números e símbolos.</small>
@@ -51,7 +51,7 @@
           <p>Cada código funciona uma única vez para resgatar sua conta em caso de perda do dispositivo.</p>
           <pre id="authRecoveryCodes" class="recovery-codes"></pre>
           <button class="button ghost auth-submit" id="copyRecoveryCodes" type="button">Copiar códigos</button>
-          <button class="button gold auth-submit" id="finishRecovery" type="button">Já guardei — entrar no Atrium Senda</button>
+          <button class="button gold auth-submit" id="finishRecovery" type="button">Já guardei — entrar na Central Keller</button>
         </div>
 
         <div class="auth-tabs" id="authTabs">
@@ -61,14 +61,14 @@
 
         <form id="authRegisterForm" class="auth-step">
           <p class="eyebrow">Novo Membro da Equipe</p><h2>Solicitar acesso ao Keller Advogados</h2>
-          <p>Informe seus dados para receber autorização do Administrador Master (Dr. Ricardo Rossetto - ricardo.rossetto.adv@gmail.com).</p>
+          <p>Informe seus dados, vincule seu autenticador e aguarde a autorização do administrador.</p>
           <label>Nome completo<input name="displayName" autocomplete="name" required placeholder="Dr(a). Nome Sobrenome" maxlength="100"></label>
           <label>E-mail de contato<input name="email" type="email" autocomplete="email" required placeholder="advogado@keller.adv.br" maxlength="100"></label>
-          <label>Usuário de acesso<input name="username" autocomplete="username" required pattern="[a-zA-Z0-9._-]{3,64}" placeholder="nome.sobrenome" maxlength="64"></label>
+          <label>Usuário de acesso<input name="username" autocomplete="username" required pattern="[a-zA-Z0-9._\x2d]{3,64}" placeholder="nome.sobrenome" maxlength="64"></label>
           <label>OAB / Cargo (opcional)<input name="oab" placeholder="OAB/RS 000000" maxlength="40"></label>
           <label>Senha de acesso<input name="password" type="password" autocomplete="new-password" required minlength="10" maxlength="128"></label>
           <label>Confirmar senha<input name="confirmPassword" type="password" autocomplete="new-password" required minlength="10" maxlength="128"></label>
-          <button class="button gold auth-submit" type="submit">Enviar solicitação para o Dr. Ricardo</button>
+          <button class="button gold auth-submit" type="submit">Configurar 2FA e solicitar acesso</button>
         </form>
 
         <form id="authLoginForm" class="auth-step">
@@ -267,7 +267,7 @@
             <input id="globalSearch" type="search" placeholder="Processo, cliente ou tarefa">
             <kbd>/</kbd>
           </label>
-          <button class="button ghost" id="tourButton" title="Apresentação Guiada do Atrium Senda">
+          <button class="button ghost" id="tourButton" title="Apresentação guiada da Central Keller">
             <svg class="btn-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <circle cx="12" cy="12" r="10"/>
               <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
@@ -306,13 +306,13 @@
         <button id="dismissBanner" aria-label="Fechar aviso">×</button>
       </div>
 
-      <section class="view active" id="view-dashboard" data-title="Painel Jurídico" data-eyebrow="Atrium Senda · Visão Executiva">
+      <section class="view active" id="view-dashboard" data-title="Painel Jurídico" data-eyebrow="Central Keller · Visão Executiva">
         <div class="bento-dashboard-grid">
-          <!-- Bento 1: Hero Card Atrium Senda -->
+          <!-- Bento 1: visão executiva da Central Keller -->
           <article class="hero-card">
             <div class="hero-overlay"></div>
             <div class="hero-content">
-              <span class="gold-pill">✦ Atrium Senda · <span id="todayLabel"></span></span>
+              <span class="gold-pill">✦ Central Keller · <span id="todayLabel"></span></span>
               <h2>O que exige sua<br><em>atenção hoje</em></h2>
               <p id="heroSummary">A central está organizando suas fontes oficiais e seus próximos prazos.</p>
               <div class="hero-actions">
@@ -710,7 +710,7 @@
         </div>
         <article class="card architecture-card">
           <div><p class="eyebrow">Arquitetura protegida</p><h3>Separação entre interface e credenciais</h3></div>
-          <div class="architecture-flow"><span>Portais judiciais</span><b>→</b><span>Agente local seguro</span><b>→</b><span>Atrium Senda</span><b>→</b><span>Triagem humana</span></div>
+          <div class="architecture-flow"><span>Portais judiciais</span><b>→</b><span>Agente local seguro</span><b>→</b><span>Central Keller</span><b>→</b><span>Triagem humana</span></div>
           <button class="button ghost hidden" id="forgetTrustedDeviceButton" type="button">Esquecer este navegador</button>
         </article>
       </section>
@@ -772,7 +772,7 @@
             </div>
             <div class="toolbar-actions">
               <button class="button ghost" id="importerCancelButton">Descartar</button>
-              <button class="button gold" id="importerCommitButton">Confirmar e Importar para o Atrium Senda</button>
+              <button class="button gold" id="importerCommitButton">Confirmar e importar para a Central Keller</button>
             </div>
           </div>
           <div class="importer-badges" id="importerBadges"></div>
@@ -823,7 +823,7 @@
           <div id="aiOnboardingBanner" class="ai-onboarding-card card">
             <div class="ai-onboarding-content">
               <h3>Ative o Assistente Jurídico com o Google Gemini (Gratuito)</h3>
-              <p>O Assistente Jurídico do Atrium Senda utiliza a tecnologia do <strong>Google Gemini</strong> para interpretar intimações judiciais, calcular contagem precisa de prazos em dias úteis (CPC/2015), redigir minutas contratuais e sugerir estratégias processuais.</p>
+              <p>O Assistente Jurídico da Central Keller utiliza o <strong>Google Gemini</strong> para interpretar intimações, auxiliar em estimativas de prazos sujeitas à conferência, redigir minutas e sugerir estratégias processuais.</p>
               <div class="ai-steps-grid">
                 <div class="ai-step-item">
                   <span class="ai-step-num">1</span>
@@ -835,7 +835,7 @@
                 <div class="ai-step-item">
                   <span class="ai-step-num">2</span>
                   <div>
-                    <strong>Ative no Atrium Senda</strong>
+                    <strong>Ative na Central Keller</strong>
                     <p>Insira a chave no campo seguro. O sistema valida a conexão instantaneamente.</p>
                   </div>
                 </div>
@@ -843,7 +843,7 @@
                   <span class="ai-step-num">3</span>
                   <div>
                     <strong>Potencialize sua Advocacia</strong>
-                    <p>Analise peças, pesquise teses e automatize triagens com privacidade local.</p>
+                    <p>A pergunta e somente o contexto interno relevante são enviados ao Google. Evite incluir dados além dos necessários e confira o resultado.</p>
                   </div>
                 </div>
               </div>
@@ -863,7 +863,7 @@
               Analisar Última Intimação (DJEN)
             </button>
             <button class="quick-prompt-btn" type="button" data-prompt="Explique com precisão a contagem de prazo em dias úteis para contestação no CPC/2015 (Art. 219 e Art. 335), detalhando termo inicial e hipóteses de suspensão.">
-              Calcular Prazos Processuais (CPC)
+              Estimar Prazos Processuais (CPC)
             </button>
             <button class="quick-prompt-btn" type="button" data-prompt="Redija um modelo completo de recurso de Apelação Cível com preliminares de cerceamento de defesa e mérito recursal, fundamentado na jurisprudência do STJ.">
               Minuta de Apelação Cível
@@ -887,13 +887,13 @@
                     <p>Posso ajudá-lo(a) a:</p>
                     <ul>
                       <li><strong>Analisar intimações judiciais</strong> do DJEN / DJe / eproc e identificar prazos do CPC.</li>
-                      <li><strong>Calcular e planejar estratégias</strong> recursais e contestações em dias úteis.</li>
+                      <li><strong>Estimar e planejar estratégias</strong> recursais e contestações em dias úteis, sempre com conferência humana.</li>
                       <li><strong>Redigir petições, contratos e minutas</strong> com base nos processos e contatos do seu escritório.</li>
                       <li><strong>Tirar dúvidas sobre legislação e precedentes</strong> dos tribunais superiores (STJ, STF e TST).</li>
                     </ul>
                     <p>Como posso auxiliá-lo(a) hoje?</p>
                   </div>
-                  <div class="message-meta">Assistente Atrium Senda</div>
+                  <div class="message-meta">Assistente Central Keller</div>
                 </div>
               </div>
             </div>
@@ -908,6 +908,7 @@
                   <span>Enviar</span>
                 </button>
               </div>
+              <p class="ai-privacy-notice">Ao enviar, sua mensagem, o histórico recente e apenas os registros relacionados à pergunta são transmitidos à API do Google Gemini. Prazos e referências devem ser conferidos no processo e em fontes oficiais.</p>
             </form>
           </div>
         </div>
@@ -1299,7 +1300,7 @@
             <input type="file" id="officeLogoInput" accept="image/png,image/jpeg,image/svg+xml,image/webp" class="hidden">
             <button class="button ghost" type="button" id="btnChooseOfficeLogo">Carregar Logo do Escritório</button>
             <button class="button ghost hidden" type="button" id="btnRemoveOfficeLogo">Remover logo</button>
-            <small style="display:block;margin-top:6px;color:#817d74;font-size:11px;">Formatos: PNG, JPG ou SVG. Fica salva localmente no seu Atrium Senda.</small>
+            <small style="display:block;margin-top:6px;color:#817d74;font-size:11px;">Formatos: PNG, JPG ou SVG. A imagem fica salva localmente na Central Keller.</small>
           </div>
         </div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;">
@@ -1331,7 +1332,7 @@
             <path d="M43 84 C41 72 52 64 48 50 C45 40 49 32 50 26 C51 32 55 40 52 50 C48 64 59 72 57 84 H43 Z" fill="#FFF5D0"/>
             <path d="M40 24 C55 16 84 20 84 38 C84 52 60 54 60 64 C60 74 76 76 86 68 L88 78 C74 88 46 84 46 66 C46 50 70 48 70 38 C70 30 56 28 42 34 Z" fill="#D4AF37"/>
           </svg>
-          <span id="tourModalTitle">Apresentação Guiada · Atrium Senda</span>
+          <span id="tourModalTitle">Apresentação guiada · Central Keller</span>
         </div>
         <button class="icon-button" id="tourCloseButton" aria-label="Fechar apresentação">×</button>
       </header>
@@ -1348,12 +1349,12 @@
               </svg>
             </div>
             <div>
-              <h2>Bem-vindo ao Atrium Senda</h2>
+              <h2>Bem-vindo à Central Keller</h2>
               <p>Plataforma de gestão jurídica inteligente, centralizada e soberana.</p>
             </div>
           </div>
           <div class="tour-slide-body">
-            O <strong>Atrium Senda</strong> une o <em>Atrium</em> (ponto central romano de recepção, convergência e segurança Zero Trust) com a <em>Senda</em> (o fluxo contínuo de trabalho, controle de prazos e eficiência). Tenha controle absoluto sem mensalidades abusivas nem dependência de terceiros.
+            A <strong>Central Keller</strong> reúne processos, tarefas, agenda, intimações e fontes oficiais em um único ambiente protegido para a rotina do escritório.
             <div class="tour-features-grid">
               <div class="tour-feature-card"><strong>100% White Label</strong><span>Personalize com o nome, logo e identidade do seu próprio escritório.</span></div>
               <div class="tour-feature-card"><strong>Criptografia &amp; Segurança</strong><span>Autenticação TOTP 2FA e chaves isoladas no seu computador.</span></div>
@@ -1375,7 +1376,7 @@
             </div>
           </div>
           <div class="tour-slide-body">
-            Ao abrir seu Atrium Senda, o painel central organiza automaticamente suas prioridades do dia, o gráfico semanal de distribuição de prazos, intimações recém-chegadas e o status das suas fontes oficiais.
+            Ao abrir a Central Keller, o painel organiza automaticamente as prioridades do dia, o gráfico semanal de distribuição de prazos, as intimações recém-chegadas e o status das fontes oficiais.
             <div class="tour-features-grid">
               <div class="tour-feature-card"><strong>Foco Diário Inteligente</strong><span>Tarefas críticas ordenadas por urgência e prazo fatal.</span></div>
               <div class="tour-feature-card"><strong>Distribuição Semanal</strong><span>Visualização gráfica dos volumes de prazos de segunda a sexta.</span></div>
@@ -1460,7 +1461,7 @@
             </div>
             <div>
               <h2>Personalização &amp; Certificado A1</h2>
-              <p>Deixe o Atrium Senda com a cara do seu escritório.</p>
+              <p>Mantenha a Central Keller alinhada à identidade do escritório.</p>
             </div>
           </div>
           <div class="tour-slide-body">
@@ -1503,7 +1504,7 @@
       </header>
       <form id="calendarConfigForm">
         <p style="font-size:13px;color:var(--text-secondary);margin-bottom:16px;line-height:1.6;">
-          Conecte o Atrium Senda com sua agenda externa favorita (Google Agenda, Microsoft Outlook, Apple Calendar ou qualquer servidor compatível com iCalendar / Webcal).
+          Conecte a Central Keller com sua agenda externa favorita (Google Agenda, Microsoft Outlook, Apple Calendar ou qualquer servidor compatível com iCalendar / Webcal).
         </p>
         <div class="field full" style="margin-bottom:16px;">
           <label for="calendarInputUrl">URL do Link da Agenda (iCal / Webcal .ics)</label>
@@ -1543,7 +1544,7 @@
         <div class="field full" style="margin-bottom:16px;">
           <label for="geminiApiKeyInput">Chave da API Gemini (Google AI Studio)</label>
           <input id="geminiApiKeyInput" type="password" placeholder="AIzaSy..." required autocomplete="off">
-          <small class="field-note">A chave é criptografada e armazenada de forma segura na sua instalação local.</small>
+          <small class="field-note">A chave é criptografada, armazenada somente no servidor local e nunca devolvida ao navegador.</small>
         </div>
         <div id="geminiKeyFeedback" class="gemini-key-feedback hidden"></div>
         <footer>
