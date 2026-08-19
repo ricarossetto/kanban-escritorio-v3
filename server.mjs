@@ -900,6 +900,34 @@ const server = http.createServer(async (req, res) => {
       return json(res, 200, { ok: true, revoked }, { 'Set-Cookie': security.clearTrustedDeviceCookie() });
     }
 
+    if (req.method === 'POST' && url.pathname === '/api/tjrs/consult') {
+      assertAuthenticated(req);
+      const body = await readJson(req);
+      const rawNumber = String(body.processNumber || '').trim();
+      const cleanNumber = rawNumber.replace(/\D/g, '');
+      if (cleanNumber.length < 15) throw Object.assign(new Error('Número de processo CNJ inválido.'), { statusCode: 400 });
+      
+      const codComarca = body.codComarca || cleanNumber.slice(-3) || '029';
+      const tjrsUrl = `https://consulta-processual-service.tjrs.jus.br/api/consulta-service/v1/consultaProcesso?numeroProcesso=${cleanNumber}&codComarca=${codComarca}`;
+      
+      try {
+        const response = await fetch(tjrsUrl, {
+          headers: {
+            'Accept': 'application/json, text/plain, */*',
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+          },
+          signal: AbortSignal.timeout(12_000)
+        });
+        if (!response.ok) {
+          return json(res, 200, { ok: false, message: `O microserviço do TJRS retornou status HTTP ${response.status}.` });
+        }
+        const data = await response.json().catch(() => null);
+        return json(res, 200, { ok: true, data });
+      } catch (err) {
+        return json(res, 200, { ok: false, message: `Não foi possível conectar ao TJRS: ${err.message}` });
+      }
+    }
+
     if (req.method === 'GET' && url.pathname === '/api/status') {
       assertAuthenticated(req); const runtime = await readRuntime();
       let hasCalendar = Boolean(process.env.EXTERNAL_CALENDAR_URL || process.env.ADVBOX_WEBCAL_URL);
